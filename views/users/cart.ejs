@@ -1,0 +1,148 @@
+<%- include('../layouts/commonHeader.ejs') %>
+
+
+
+
+
+<section class="">
+    <div class="container py-5">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-12">
+          <div class="card card-registration card-registration-2">
+            <div class="card-body p-0">
+              <div class="row g-0">
+                <div class="col-lg-8">
+                  <div class="p-5">
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                      <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
+                    </div>
+                    <%if(cartProducts==undefined){%>
+                        <%}else{%>
+                            <%if(cartProducts.item){%>
+                                <%cartProducts.item.forEach((item)=>{%>
+                                    <%if(item.product.is_show===true){%>
+  
+                    <div class="row mb-4 d-flex justify-content-between align-items-center">
+                      <div class="col-md-2 col-lg-2 col-xl-2">
+                        <img
+                          src="/proImage/<%=item.product.image[0]%>"
+                          class="img-fluid rounded-3" alt="Cotton T-shirt">
+                      </div>
+                      <div class="col-md-3 col-lg-3 col-xl-3">
+                        <h6 class="text-muted"><%=item.product.title%></h6>
+                      </div>
+                      <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                        <button class="quantity__minus" data-id="<%=item._id%>" data-index="">-</button>
+                        <h5 id="quantity-" class="ml-3 mr-3"><%=item.quantity%></h5>
+                        <button class="quantity__plus" data-id="<%=item._id%>" data-index="">+</button>
+                      </div>
+                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                        <h6 class="mb-0" id="productTotal<%=item._id%>">₹ <%=item.price*item.quantity%></h6>
+                      </div>
+                      <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                        <td class="cart__close"><a href="/removeCart?id=<%=item._id%>"><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"/></svg></span></a></td>
+                      </div>
+                    </div>
+  
+                    <hr class="my-4">
+                    <%}%>
+                              
+                    <%})%>
+            <%}%>
+            <%}%>
+                    <div class="pt-5">
+                      <h6 class="mb-0"><a href="/shopPage" class="text-body"><i
+                            class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 bg-grey">
+                  <div class="p-5">
+                    <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
+                    <hr class="my-4">
+  
+                    <div class="d-flex justify-content-between mb-5">
+                      <h5 class="text-uppercase">Total price</h5>
+                      <%if(totalPrice){%>
+                        <h5 id="TotalPrice">₹ <%=totalPrice%></h5>
+                    <%}%>
+                    </div>
+  
+                    <a href="/checkOut" class="btn btn-dark btn-block btn-lg"
+                      data-mdb-ripple-color="dark">Proceed to checkout</a>
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+<%if(msg){%>
+    <script>
+      new Swal({
+          title: "Error",
+          text: "<%=msg%>",
+          icon: "error",
+          showConfirmButton:false,
+          timer:2000
+        });
+    </script>
+<%}%>
+
+<script>
+
+
+
+const plusBtns = document.querySelectorAll('.quantity__plus');
+plusBtns.forEach(btn => {
+    btn.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Button clicked');
+        const proid = event.target.dataset.id;
+        const userId = '<%=session%>';
+        fetch(`/incrementCart?id=${proid}&userId=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            // Update the quantity displayed on the page
+            
+            const quantityEl = event.target.parentElement.querySelector('#quantity-');
+            quantityEl.innerText = data.quantity;
+           document.querySelector(`#productTotal${proid}`).textContent ='₹'+ data.price
+           document.querySelector('#TotalPrice').innerText ='₹'+ data.totalPrice
+        })
+        .catch(err => console.log(err))
+    });
+});
+
+
+const minusBtns = document.querySelectorAll('.quantity__minus');
+minusBtns.forEach(btn => {
+    btn.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Button clicked');
+        const proid = event.target.dataset.id;
+        const userId = '<%=session%>';
+        fetch(`/decrementcart?id=${proid}&userId=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            // Update the quantity displayed on the page
+            
+            const quantityEl = event.target.parentElement.querySelector('#quantity-');
+            quantityEl.innerText = data.quantity;
+           document.querySelector(`#productTotal${proid}`).textContent ='₹'+ data.price
+           document.querySelector('#TotalPrice').innerText ='₹'+ data.totalPrice
+        })
+        .catch(err => console.log(err))
+    });
+});
+
+</script>
+<%- include('../layouts/pagesFooter.ejs') %>

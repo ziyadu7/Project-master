@@ -1,0 +1,44 @@
+<%- include('../layouts/commonHeader.ejs') %>               
+<section class="checkout spad">
+    <div class="container">
+        <form action="/addAddress" method="post" class="checkout__form" method="post">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>Enter Address</h5>
+                    <div class="row">
+                        
+                            <div class="col-lg-12">
+                            <div class="checkout__form__input">
+                                <p>Country <span>*</span></p>
+                                <input type="text" name="country" >
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Address <span>*</span></p>
+                                <input type="text" name="address">
+                                
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Town/City <span>*</span></p>
+                                <input type="text" name="city">
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>District <span>*</span></p>
+                                <input type="text" name="district">
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>State <span>*</span></p>
+                                <input type="text" name="state">
+                            </div>
+                        
+                        </div>
+                    
+                        </div>
+                        <div>
+                            <button class="btn btn-danger" type="submit">ADD ADDRESS</button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+</section>           
+<%- include('../layouts/pagesFooter.ejs') %>

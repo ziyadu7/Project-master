@@ -1,0 +1,48 @@
+<%- include('../layouts/headerUser.ejs') %>
+
+
+
+
+
+  <body class="img js-fullheight backgrndotpmail">
+    <div class="container">
+      <div class="row mt-5">
+        <div class=" col-md-4 text-center mt-5">
+          <form action="/otpVerifyMail" method="post">
+            <div class="form-login ">
+              <div><br><a href="/"><img width="100%" src="/logo-png-whte.png" alt=""></a></div>
+              <br><br><input name="email" type="email" class="form-control input-sm chat-input text-center"
+                placeholder="Email" />
+              </br>
+              <% if(typeof message!='undefined' ||typeof msg!='undefined' ){ %>
+                <small class="text-success txt-style">
+                  <%= message %>
+                </small>
+                <small class="text-danger txt-style">
+                  <%= msg %>
+                </small>
+                <% } %>
+                  </br></br>
+                  <div class="wrapper">
+                    <span class="group-btn">
+                      <button type="submit" class="btn btn-danger btn-lg txt-style">Sent OTP</button>
+                    </span>
+                  </div>
+          </form>
+          <br>
+          <div class="wrapper">
+            <span class="group-btn">
+              <br><a href="/login" class="btn btn-outline-warning btn-lg txt-style">User Login</i></a>
+            </span>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    </div>
+    </section>
+  </body>
+
+
+
+  <%- include('../layouts/footerUser.ejs') %>

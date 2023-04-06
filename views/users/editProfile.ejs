@@ -1,0 +1,183 @@
+<%- include('../layouts/commonHeader.ejs') %>
+
+    <div class="container-xl px-4 mt-4">
+        <form action="/editProfile?index=<%=index2%>" enctype="multipart/form-data" method="post">
+            <div class="row">
+                <div class="col-xl-4">
+
+                    <div class="card mb-4 mb-xl-0">
+                        <div class="card-header">Profile Picture</div>
+                        <div class="card-body text-center">
+                            <%if(userData.image){%>
+                                <img src="/userProfileIMG/<%=userData.image%>" alt="avatar"
+                                    class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                <%}else{%>
+                                    <img src="https://storage.needpix.com/rsynced_images/blank-profile-picture-973460_1280.png"
+                                        alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                                    <%}%>
+
+                                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB
+                                        </div>
+
+                                        <div class="btn btn-primary btn-rounded">
+                                            <label class="form-label text-white m-1" for="customFile2">Add Image</label>
+                                            <input type="file" name="image" class="form-control" id="customFile2" />
+                                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8">
+
+                    <div class="card mb-4">
+                        <div class="card-header">Account Details</div>
+                        <div class="card-body">
+
+                            <div class="mb-3">
+                                <label class="small mb-1" for="inputUsername">Username</label>
+                                <input name="username" class="form-control bg-secondary" id="inputUsername username1" type="text"
+                                    placeholder="Enter new username" value="<%=userData.username%>">
+                            </div>
+                             <%if(addressCount){%>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputOrgName">Address</label>
+                                    <textarea name="address" id="" cols="30" rows="5" class="form-control bg-secondary"
+                                        id="inputOrgName address1" type="text" placeholder="Enter your address"
+                                        value=""><%=addressCount.address%></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">City</label>
+                                    <input name="city" class="form-control bg-secondary" id="inputEmailAddress city1" type="text"
+                                        placeholder="City" value="<%=addressCount.city%>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">district</label>
+                                    <input name="district" class="form-control bg-secondary" id="inputEmailAddress district1" type="text"
+                                        placeholder="District"
+                                        value="<%=addressCount.district%>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">State</label>
+                                    <input name="state" class="form-control bg-secondary" id="inputEmailAddress state1" type="text"
+                                        placeholder="State" value="<%=addressCount.state%>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">Country</label>
+                                    <input name="country" class="form-control bg-secondary" id="inputEmailAddress country1" type="text"
+                                        placeholder="Country" value="<%=addressCount.country%>">
+                                </div>
+                                <%}else if(userData.address[0]!=null){%>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputOrgName">Address</label>
+                                    <textarea name="address" id="" cols="30" rows="5" class="form-control bg-secondary"
+                                        id="inputOrgName address1" type="text" placeholder="Enter your address"
+                                        value=""><%=userData.address[0].address%></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">City</label>
+                                    <input name="city" class="form-control bg-secondary" id="inputEmailAddress city1" type="text"
+                                        placeholder="City" value="<%=userData.address[0].city%>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">district</label>
+                                    <input name="district" class="form-control bg-secondary" id="inputEmailAddress district1" type="text"
+                                        placeholder="District"
+                                        value="<%=userData.address[0].district%>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">State</label>
+                                    <input name="state" class="form-control bg-secondary" id="inputEmailAddress state1" type="text"
+                                        placeholder="State" value="<%=userData.address[0].state%>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputEmailAddress">Country</label>
+                                    <input name="country" class="form-control bg-secondary" id="inputEmailAddress country1" type="text"
+                                        placeholder="Country" value="<%=userData.address[0].country%>">
+                                </div>
+                                <%}else{%>
+                                    <a href="/addAddress" class="btn btn-danger">Add new address</a>
+                                    <%}%>
+
+                                        <div class="row gx-3 mb-3">
+                                            <div class="col-md-6">
+                                                <label class="small mb-1" for="inputPhone">Phone number</label>
+                                                <input name="phone" class="form-control bg-secondary" id="inputPhone" type="tel"
+                                                    placeholder="Enter your phone number" value="<%=userData.phone%>">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary" type="submit">Save changes</button>
+                                            <a href="/moreAddress" class="btn btn-primary">More Address</a>
+                                        </div>
+                                        <br>
+                                        <%if(msg!=null){%>
+                                            <script>
+                                                new Swal({
+                                                  title: "Error",
+                                                  text: "<%=msg%>",
+                                                  icon: "error",
+                                                  showConfirmButton:false,
+                                                  timer:2000
+                                                });
+                                            </script>
+                                           <%}%>
+                                        <small class="error text-danger"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+<script>
+const form = document.querySelector('form');
+const usernameInput = document.getElementById('inputUsername username1');
+const addressInput = document.getElementById('inputOrgName address1');
+const cityInput = document.getElementById('inputEmailAddress city1');
+const districtInput = document.getElementById('inputEmailAddress district1');
+const stateInput = document.getElementById('inputEmailAddress state1');
+const countryInput = document.getElementById('inputEmailAddress country1');
+const phoneInput = document.getElementById('inputPhone');
+const errorElement =document.querySelector('.error')
+
+form.addEventListener('submit',(e)=> {
+
+    let message=[]
+    if(usernameInput.value.trim() === '') {
+        message.push('Please enter a username')
+    }
+
+    if(addressInput.value.trim() === '') {
+        message.push('Please enter an address')
+        
+    }
+     if(cityInput.value.trim() === '') {
+        message.push('Please enter a city')
+
+    }
+
+     if(districtInput.value.trim() === '') {
+        message.push('Please enter a district')
+    }
+    if(stateInput.value.trim() === '') {
+        message.push('Please enter a state')
+    }
+     if(countryInput.value.trim() === '') {
+        message.push('Please enter a country')
+    }
+     if(phoneInput.value.toString().trim() === '') {
+        message.push('Please enter a phone number')
+    }
+    if(!/^[0-9]*$/.test(phoneInput.value.trim())) {
+        message.push('Please enter a valid phone number')
+    }
+
+    if (message.length > 0) {
+        e.preventDefault();
+        errorElement.innerText = message.join(', ');
+    }
+});
+</script>
+
+
+
+    <%- include('../layouts/pagesFooter.ejs') %>

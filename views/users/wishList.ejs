@@ -1,0 +1,95 @@
+<%- include('../layouts/commonHeader.ejs') %>
+
+
+    <section class="">
+        <div class="container-fluid py-5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-registration card-registration-2">
+                        <div class="card-body p-0">
+                            <div class="row g-0">
+                                <div class="col-lg-12">
+                                    <div class="p-5">
+                                        <div class="d-flex justify-content-between align-items-center mb-5">
+                                            <h1 class="fw-bold mb-0 text-black">Wishlist</h1>
+                                        </div>
+                                        <%if(wishlist!==undefined){%>
+                                            <%if(wishlist.wishlist){%>
+                                                <%wishlist.wishlist.forEach((item)=>{%>
+                                                    <%if(item.is_show===true){%>
+
+                                                        <div
+                                                            class="row mb-4 d-flex justify-content-between align-items-center">
+                                                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                                                <img src="/proImage/<%=item.image[0]%>"
+                                                                    class="img-fluid rounded-3" alt="Cotton T-shirt">
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                                                <h6 class="text-muted">
+                                                                    <%=item.title%>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                                <h6 class="mb-0" id="productTotal<%=item._id%>">₹
+                                                                    <%=item.price%>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                                                <td class="cart__close"><a
+                                                                        href="/removeWishlist?id=<%=item._id%>"><span><svg
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                width="24" height="24"
+                                                                                viewBox="0 0 24 24">
+                                                                                <path fill="currentColor"
+                                                                                    d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z" />
+                                                                            </svg></span></a></td>
+                                                            </div>
+                                                            <div class="col-md-1 col-lg-1 col-xl-1">
+                                                                <td class="cart__close"><a href="/addToCart?id=<%=item._id%>"><span
+                                                                            class="icon_bag_alt"></span></a></td>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="my-4">
+                                                        <%}%>
+
+                                                            <%})%>
+                                                                <%}%>
+                                                                    <%}%>
+                                                                        <div class="row">
+                                                                            <div class=" d-flex justify-content-end">
+                                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                                    <div class="cart__btn update__btn">
+                                                                                        <a href="/"><span
+                                                                                                class="icon_loading"></span>
+                                                                                            Continue shoping</a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%if(message!=null){%>
+        <script>
+            new Swal({
+                title: "Success",
+                text: "<%=message%>",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        </script>
+        <%}%>
+
+
+
+
+            <%- include('../layouts/pagesFooter.ejs') %>

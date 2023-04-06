@@ -1,0 +1,76 @@
+<%- include('../layouts/headerUser.ejs') %>
+
+  <body class="img js-fullheight backgrnd">
+    <div class="container-fluid">
+      <div class="row mt-5">
+        <div class=" col-md-4 text-center mt-3">
+          <form action="/login" id="form" method="post">
+            <div class="form-login ">
+              <div><br><a href="/"><img width="100%" src="/logo-png-whte.png" alt=""></a></div>
+              <br><br><input name="email" type="email" id="mail" class="form-control input-sm chat-input text-center"
+                placeholder="Email" />
+              </br>
+              <input name="password" type="password" id="pas" class="form-control input-sm chat-input text-center"
+                placeholder="Password" />
+              <% if(typeof message!='undefined' ||typeof msg!='undefined' ){ %>
+                <small class="text-success txt-style">
+                  <%= message %>
+                </small>
+                <small class="text-danger txt-style">
+                  <%= msg %>
+                </small>
+                <% } %>
+                <small class="error text-danger txt-style"></small>
+                  </br></br>
+                  <div class="wrapper">
+                    <span class="group-btn">
+                      <button type="submit" class="btn btn-danger btn-lg txt-style">Login</button>
+                    </span>
+                  </div>
+          </form>
+          <br>
+          <div class="wrapper">
+            <span class="group-btn">
+              <br><a href="/otp-login" class="btn btn-outline-warning btn-lg txt-style">OTP login </i></a>
+            </span>
+          </div>
+          <br>
+          <div class="wrapper">
+            <span class="group-btn">
+              <br><br><a href="/signup" class="acc txt-style">Don't have an account? </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </section>
+  </body>
+
+
+
+  <script>
+    const form = document.getElementById('form');;
+    const emailInput = document.getElementById('mail');
+    const passwordInput = document.getElementById('pas');
+    const errorElement = document.querySelector('.error');
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    form.addEventListener('submit', (e) => {
+      let messages = [];
+  
+      if (emailInput.value.trim().length === 0) {
+        messages.push('email is required');
+      }else if (!emailRegex.test(emailInput.value.trim())) {
+        messages.push('Email is invalid');
+      }else if (passwordInput.value.trim().length===0) {
+        messages.push('Password required');
+      }
+  
+      if (messages.length > 0) {
+        e.preventDefault();
+        errorElement.innerText = messages.join(', ');
+      }
+    });
+  </script>
+  <%- include('../layouts/footerUser.ejs') %>

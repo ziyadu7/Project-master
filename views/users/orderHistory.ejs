@@ -1,0 +1,52 @@
+<%- include('../layouts/commonHeader.ejs') %>
+<div class="container">
+    <!-- row -->
+
+    <div class="col-12 tm-block-col">
+<div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+    <h2 class="tm-block-title text-center my-5">Order History</h2>
+    <table class="table table-striped text-center">
+        <thead class="bg-secondary">
+            <tr>
+                <th scope="col">Start Date</th>
+                <th scope="col">Products Count</th>
+                <th scope="col">totalPrice</th>
+                <th scope="col">Status</th>
+                <th scope="col">View</th>
+                
+            </tr>
+        </thead>
+<%if(orders){%>
+    <tbody>
+        <%orders.forEach(order => {%>
+            <tr scope="row">
+                <td>
+                    <%= order.start_date %>
+                </td>
+                <td>
+                    <%= order.proCount %>
+                </td>
+                <td>
+                    <%= order.totalPrice %>
+                </td>
+                <td>
+                    <%=order.status%>
+                </td>
+                    
+                <td>
+                    <a
+                    href="/orders?orderid=<%=order._id%>"
+                    class="btn btn-warning btn-sm rounded-pill">View</a>
+                </td>
+               
+            </tr>
+        <%})%>
+        
+</tbody>
+    <%}%>
+       
+    </table>
+</div>
+</div>
+</div>
+<%- include('../layouts/pagesFooter.ejs') %>

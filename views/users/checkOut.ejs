@@ -1,0 +1,455 @@
+<%- include('../layouts/commonHeader.ejs') %>
+
+    <%if(addressCount){ %>
+
+
+        
+        <div class="container  bg-light pt-2 mt-5"> 
+            <div class="cupon_area mt-3 col-12">
+            
+                <h5 class="mb-2 text-center">Enter coupon details</h5>
+                <div class="mt-5">
+                    <form id="coupon-form-submit">
+                        <div class="d-flex justify-content-center"><input type="text" style="height: 30px; width: 200px;"
+                                placeholder="Enter coupon code" id="coupon" name="coupon">
+                            <button class="btn-primary ms-4" type="submit" form="coupon-form-submit" id="applyCoupon"> Apply
+                                Coupon</button>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <small id="codestate"></small>
+                        </div>
+                    </form>
+                </div>
+            
+            
+                <!--popup window  -->
+                <% if (coupons && coupons.length> 0) { %>
+                    <div class="d-flex justify-content-center mt-5 mb-5">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#Coupon"
+                            class="btn btn-danger btn-lg rounded-pill">Coupon</button>
+                    </div>
+            <div class="container bg-danger">
+                    <div id="Coupon" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog bg-danger text-white">
+                            <% for (var i=0; i < coupons.length; i++) { %>
+                                <span class="close" onclick="closePopup()">&times;</span>
+                                <h5>Coupon Codes</h5>
+                                <ul>
+                                    <li>
+                                        <h5 style="text-shadow: darkgrey; font-weight: 600;">
+                                            <%= coupons[i].couponCode %>
+                                        </h5>
+                                    </li>
+                                    <li>
+                                        <h6>Minimum Purchase of : <%= coupons[i].minPurchase %>Rs</h6>
+                                    </li>
+                                    <li>
+                                        <h6>Maximum Discount : <%= coupons[i].maxDiscount %>Rs</h6>
+                                    </li>
+                                </ul>
+                                <hr>
+                                <% } %>
+                        </div>
+                    </div></div>
+                    <% } else { %>
+                        <p>No coupons available</p>
+                        <% } %>
+            </div>
+        </div>
+
+
+        <section class="checkout spad">
+            <div class="container">
+                <div class="row">
+                </div>
+                <form action="/placeOrder" class="checkout__form">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h5>Billing detail</h5>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="checkout__form__input">
+                                        <p>Name <span>*</span></p>
+                                        <input type="text" value="<%=user.username%>" name="name" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="checkout__form__input">
+                                        <p>Country <span>*</span></p>
+                                        <input type="text" value="<%=addressCount.country%>" name="country" disabled>
+                                    </div>
+                                    <div class="checkout__form__input">
+                                        <p>Address <span>*</span></p>
+                                        <input type="text" value="<%=addressCount.address%>" name="address" disabled>
+
+                                    </div>
+                                    <div class="checkout__form__input">
+                                        <p>Town/City <span>*</span></p>
+                                        <input type="text" value="<%=addressCount.city%>" name="city" disabled>
+                                    </div>
+                                    <div class="checkout__form__input">
+                                        <p>State <span>*</span></p>
+                                        <input type="text" value="<%=addressCount.district%>" disabled>
+                                    </div>
+                                    <div class="checkout__form__input">
+                                        <p>State <span>*</span></p>
+                                        <input type="text" value="<%=addressCount.state%>" disabled>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="checkout__form__input">
+                                        <p>Phone <span>*</span></p>
+                                        <input type="tel" value="<%=user.phone%>" name="phone" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="checkout__form__input">
+                                        <p>Email <span>*</span></p>
+                                        <input type="emal" value="<%=user.email%>" name="email" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/selectAddress" class="btn btn-primary">Select address</a>
+                        </div>
+
+                        <%if(cart.item!=null){%>
+                            <div class="col-lg-4">
+                                <div class="checkout__order">
+                                    <h5>Your order</h5>
+                                    <div class="checkout__order__product">
+                                        <ul>
+                                            <li>
+                                                <span class="top__text">Product</span>
+                                                <span class="top__text__right">Total</span>
+                                            </li>
+                                            <%cart.item.forEach((item)=>{%>
+                                                <li>
+                                                    <%=item.product.title%><span>Rs <%=item.quantity*item.price%></span>
+                                                </li>
+                                                <%})%>
+                                        </ul>
+                                    </div>
+                                    <div class="checkout__order__total">
+                                        <ul>
+                                            <li>Subtotal <span>Rs <%=cart.totalPrice%></span></li>
+                                            <%if(cart.couponDiscount){%>
+                                                <li>
+                                                    <a id="dicount"
+                                                        style="text-decoration: none; pointer-events: none;">Coupon
+                                                        Discount</a>
+
+                                                    <span id="disc" name="disc" class="text-success">Rs
+                                                        <%=cart.couponDiscount%></span>
+                                                </li>
+                                                <li>Total <span>Rs
+                                                        <%=parseInt(cart.totalPrice)-cart.couponDiscount%></span></li>
+                                                <%}else{%>
+                                                    <li>
+                                                        <a id="dicount"
+                                                            style="text-decoration: none; pointer-events: none;">Coupon
+                                                            Discount</a>
+
+                                                        <span id="disc" name="disc" class="text-success">0</span>
+                                                    </li>
+                                                    <li>Total <span class="totalPrice">Rs <%=cart.totalPrice%></span>
+                                                    </li>
+                                                    <%}%>
+
+                                        </ul>
+                                    </div>
+                                    <button type="submit" class="site-btn">Place oder</button>
+                                </div>
+                            </div>
+                            <%}else{%>
+
+                                <%}%>
+                    </div>
+                </form>
+
+            </div>
+        </section>
+        <%}else if(user.address[0]){%>
+
+            
+            <div class="container  bg-light pt-2 mt-5"> 
+                <div class="cupon_area mt-3 col-12">
+                
+                    <h5 class="mb-2 text-center">Enter coupon details</h5>
+                    <div class="mt-5">
+                        <form id="coupon-form-submit">
+                            <div class="d-flex justify-content-center"><input type="text" style="height: 30px; width: 200px;"
+                                    placeholder="Enter coupon code" id="coupon" name="coupon">
+                                <button class="btn-primary ms-4" type="submit" form="coupon-form-submit"> Apply
+                                    Coupon</button>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <small id="codestate"></small>
+                            </div>
+                            
+                        </form>
+                    </div>
+                
+                
+                    <!--popup window  -->
+                    <% if (coupons && coupons.length> 0) { %>
+                        <div class="d-flex justify-content-center mt-5 mb-5">
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#Coupon"
+                                class="btn btn-danger btn-lg rounded-pill">Coupon</button>
+                        </div>
+                <div class="container bg-danger">
+                        <div id="Coupon" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog bg-danger text-white">
+                                <% for (var i=0; i < coupons.length; i++) { %>
+                                    <span class="close" onclick="closePopup()">&times;</span>
+                                    <h5>Coupon Codes</h5>
+                                    <ul>
+                                        <li>
+                                            <h5 style="text-shadow: darkgrey; font-weight: 600;">
+                                                <%= coupons[i].couponCode %>
+                                            </h5>
+                                        </li>
+                                        <li>
+                                            <h6>Minimum Purchase of : <%= coupons[i].minPurchase %>Rs</h6>
+                                        </li>
+                                        <li>
+                                            <h6>Maximum Discount : <%= coupons[i].maxDiscount %>Rs</h6>
+                                        </li>
+                                    </ul>
+                                    <hr>
+                                    <% } %>
+                            </div>
+                        </div></div>
+                        <% } else { %>
+                            <p>No coupons available</p>
+                            <% } %>
+                </div>
+            </div>
+
+            <section class="checkout spad">
+                <div class="container">
+                    <div class="row">
+                    </div>
+                    <form action="/placeOrder" class="checkout__form">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h5>Billing detail</h5>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="checkout__form__input">
+                                            <p>Name <span>*</span></p>
+                                            <input type="text" value="<%=user.username%>" name="name" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="checkout__form__input">
+                                            <p>Country <span>*</span></p>
+                                            <input type="text" value="<%=user.address[0].country%>" name="country"
+                                                disabled>
+                                        </div>
+                                        <div class="checkout__form__input">
+                                            <p>Address <span>*</span></p>
+                                            <input type="text" value="<%=user.address[0].address%>" name="address"
+                                                disabled>
+
+                                        </div>
+                                        <div class="checkout__form__input">
+                                            <p>Town/City <span>*</span></p>
+                                            <input type="text" value="<%=user.address[0].city%>" name="city" disabled>
+                                        </div>
+                                        <div class="checkout__form__input">
+                                            <p>State <span>*</span></p>
+                                            <input type="text" value="<%=user.address[0].district%>" disabled>
+                                        </div>
+                                        <div class="checkout__form__input">
+                                            <p>State <span>*</span></p>
+                                            <input type="text" value="<%=user.address[0].state%>" disabled>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="checkout__form__input">
+                                            <p>Phone <span>*</span></p>
+                                            <input type="tel" value="<%=user.phone%>" name="phone" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="checkout__form__input">
+                                            <p>Email <span>*</span></p>
+                                            <input type="emal" value="<%=user.email%>" name="email" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="/selectAddress" class="btn btn-primary">Select address</a>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="checkout__order">
+                                    <h5>Your order</h5>
+                                    <div class="checkout__order__product">
+                                        <ul>
+                                            <li>
+                                                <span class="top__text">Product</span>
+                                                <span class="top__text__right">Total</span>
+                                            </li>
+                                            <%cart.item.forEach((item)=>{%>
+                                                <li>
+                                                    <%=item.product.title%><span>Rs <%=item.quantity*item.price%></span>
+                                                </li>
+                                                <%})%>
+                                        </ul>
+                                    </div>
+                                    <div class="checkout__order__total">
+                                        <ul>
+                                            <li>Subtotal <span>Rs <%=cart.totalPrice%></span></li>
+                                            <%if(cart.couponDiscount){%>
+                                                <li>
+                                                    <a id="dicount"
+                                                        style="text-decoration: none; pointer-events: none;">Coupon
+                                                        Discount</a>
+
+                                                    <span id="disc" name="disc" class="text-success">Rs
+                                                        <%=cart.couponDiscount%></span>
+                                                </li>
+                                                <li>Total <span>Rs
+                                                        <%=parseInt(cart.totalPrice)-cart.couponDiscount%></span></li>
+                                                <%}else{%>
+                                                    <li>
+                                                        <a id="dicount"
+                                                            style="text-decoration: none; pointer-events: none;">Coupon
+                                                            Discount</a>
+
+                                                        <span id="disc" name="disc" class="text-success">0</span>
+                                                    </li>
+                                                    <li>Total <span class="totalPrice">Rs <%=cart.totalPrice%></span>
+                                                    </li>
+                                                    <%}%>
+
+                                        </ul>
+                                    </div>
+                                    <button type="submit" class="site-btn">Place oder</button>
+                                </div>
+                                
+                               
+                            </div>
+                        </div>
+                    </form>
+
+
+
+
+
+
+                </div>
+            </section>
+
+
+            <%}else{%>
+
+                <section class="checkout spad">
+                    <div class="container">
+                        <div class="row">
+                        </div>
+                        <form action="/addAddress" method="post" class="checkout__form" method="post">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h5>Enter Address</h5>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+                                            <div class="checkout__form__input">
+                                                <p>Country <span>*</span></p>
+                                                <input type="text" name="country">
+                                            </div>
+                                            <div class="checkout__form__input">
+                                                <p>Address <span>*</span></p>
+                                                <input type="text" name="address">
+
+                                            </div>
+                                            <div class="checkout__form__input">
+                                                <p>Town/City <span>*</span></p>
+                                                <input type="text" name="city">
+                                            </div>
+                                            <div class="checkout__form__input">
+                                                <p>District <span>*</span></p>
+                                                <input type="text" name="district">
+                                            </div>
+                                            <div class="checkout__form__input">
+                                                <p>State <span>*</span></p>
+                                                <input type="text" name="state">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-danger" type="submit">ADD ADDRESS</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <%}%>
+
+                    <script>
+                        // Open the popup window
+                        function openPopup() {
+                            document.getElementById("couponPopup").style.display = "block";
+                        }
+
+                        // Close the popup window
+                        function closePopup() {
+                            document.getElementById("couponPopup").style.display = "none";
+                        }
+                    </script>
+
+                    <script>
+
+                        $("#coupon-form-submit").submit((e) => {
+                            let couponValue = document.getElementById('coupon').value;
+                            if(couponValue.trim().length==0){
+                                e.preventDefault();
+                                document.getElementById('codestate').style.color = "red"
+                                document.getElementById('codestate').innerText = 'Please enter coupon code'
+                            }else{
+                                e.preventDefault();
+                            $.ajax({
+                                url: '/checkCoupon',
+                                method: 'post',
+                                data: { coupon: couponValue },
+                                success: (response) => {
+                                    if (response.status) {
+                                        console.log(response.discountPrice)
+                                        $("#total").load(location.href + " #total");
+                                        $("#discount1").val(response.discountPrice);
+                                        $("#coupon1").val(couponValue);
+                                        document.getElementById('disc').innerText = 'Rs' + response.discountPrice
+                                        console.log(response.amount);
+                                        document.getElementById('ok').innerText = 'Rs' + response.amount
+                                        document.getElementsByClassName('totalPrice').innerText = 'Rs' + response.amount;
+                                        document.getElementById('codestate').style.color = "green"
+                                        document.getElementById('codestate').innerText = 'Coupon applied successfully'
+                                    } else if (response.used) {
+                                        document.getElementById('codestate').style.color = "red"
+                                        document.getElementById('codestate').innerText = 'Coupon already used!'
+                                    } else if (response.expired) {
+                                        document.getElementById('codestate').style.color = "red"
+                                        document.getElementById('codestate').innerText = 'Sorry coupon is expired!'
+                                    } else if (response.noMatch) {
+                                        document.getElementById('codestate').style.color = "red"
+                                        document.getElementById('codestate').innerText = 'Oops invalid coupon code!'
+                                    } else if (response.lessPrice) {
+                                        document.getElementById('codestate').style.color = "red"
+                                        document.getElementById('codestate').innerText = 'Pleae purchase more!'
+                                    }
+                                }
+                            })
+                            }
+                           
+                        })
+
+                    </script>
+                    <%- include('../layouts/pagesFooter.ejs') %>

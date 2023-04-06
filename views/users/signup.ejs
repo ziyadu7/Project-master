@@ -1,0 +1,142 @@
+<%- include('../layouts/headerUser.ejs') %>
+  <section class="img backgrndsignup">
+    <div class="container-fluid">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-lg-12 col-xl-11">
+          <div class="text-black">
+            <div class="card-body p-md-5">
+              <div class="row justify-content-center">
+                <div class="row ">
+                  <div class="col-6">
+                    <p class=" h1 fw-bold mb-5 mx-1 mx-md-4 mt-4 txt-style">Sign up</p>
+                  </div>
+                </div>
+
+                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                  <form class="mx-1 mx-md-4" id="form" action='/signup' method="post">
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+
+                      <div class="form-outline flex-fill mb-0">
+                        <input type="text" name="username" id="form3Example1c username"
+                          class="form-control rounded-pill" placeholder="Username" />
+                      </div>
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+
+                      <div class="form-outline flex-fill mb-0">
+                        <input type="email" name="email" id="form3Example3c email" class="form-control rounded-pill"
+                          placeholder="Email" />
+                      </div>
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+
+                      <div class="form-outline flex-fill mb-0">
+                        <input type="tel" name="phone" id="form3Example3c phone" class="form-control rounded-pill"
+                          placeholder="Mobile" />
+                      </div>
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+
+                      <div class="form-outline flex-fill mb-0">
+                        <input type="password" name="password" id="form3Example4c password"
+                          class="form-control rounded-pill" placeholder="Password" />
+                      </div>
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+
+                      <div class="form-outline flex-fill mb-0">
+                        <input type="password" name="Rpassword" id="form3Example4cd repassword"
+                          class="form-control rounded-pill" placeholder="Repeat Password" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div>
+                        <% if(typeof message!='undefined' ||typeof msg!='undefined' ){ %>
+                          <small class="text-success txt-style">
+                            <%= message %>
+                          </small>
+                          <small class="text-danger txt-style">
+                            <%= msg %>
+                          </small>
+                          <% } %>
+                            <small class="error text-danger txt-style"></small>
+                      </div>
+
+                    </div>
+
+                    <br>
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                      <button type="submit" class="btn btn-dark btn-lg txt-style">Register</button>
+                    </div>
+
+                  </form>
+                  <br>
+                  <div class="d-flex justify-content-center">
+                    <a class="text-dark" href="/login">
+                      <h6>Already have an account?</h6>
+                    </a>
+                  </div>
+
+
+                </div>
+                <div
+                  class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center justify-content-center order-1 order-lg-2">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    const form = document.getElementById('form');
+    const usernameInput = document.getElementById('form3Example1c username');
+    const emailInput = document.getElementById('form3Example3c email');
+    const phoneInput = document.getElementById('form3Example3c phone');
+    const passwordInput = document.getElementById('form3Example4c password');
+    const RpasswordInput = document.getElementById('form3Example4cd repassword');
+    const errorElement = document.querySelector('.error');
+  
+    form.addEventListener('submit', (e) => {
+      let messages = [];
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\d{10}$/;
+      const regex_password = /^(?=.?[A-Z])(?=.[a-z])(?=.*[0-9]){8,16}/gm
+      if(usernameInput.value.trim().length === 0 && phoneInput.value.trim().length === 0 && emailInput.value.trim().length === 0 && passwordInput.value.trim().length === 0 && RpasswordInput.value.trim().length === 0){
+        messages.push('Please fill all the forms');
+      }else if (usernameInput.value.trim().length === 0) {
+        messages.push('Username is required');
+      }else if (!emailRegex.test(emailInput.value.trim())) {
+        messages.push('Email is invalid');
+      }else if(phoneInput.value.trim().length === 0){
+        messages.push('Phone number is required'); 
+      }
+      else if (!phoneRegex.test(phoneInput.value.trim())) {
+        messages.push('Phone number is invalid');
+      }else if (passwordInput.value.length < 8) {
+        messages.push('Password must be at least 8 characters long');
+      }else if(!regex_password.test(passwordInput.value.trim())){
+        messages.push('Use strong password');
+      }else if (passwordInput.value !== RpasswordInput.value.trim()) {
+        messages.push('Passwords do not match');
+      }
+  
+      if (messages.length > 0) {
+        e.preventDefault();
+        errorElement.innerText = messages.join(', ');
+      }
+    });
+  </script>
+
+  <%- include('../layouts/footerUser.ejs')%>

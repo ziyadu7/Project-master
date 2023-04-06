@@ -1,0 +1,96 @@
+<%- include('../layouts/commonHeader.ejs') %>
+
+<section class="checkout spad">
+    <div class="container">
+        <div class="row">
+        </div>
+        <form action="/addAddress" method="post" id="form" class="checkout__form"">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>Billing detail</h5>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="checkout__form__input">
+                                <p>Address <span>*</span></p>
+                                <input type="text" name="address" id="address">
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Town/City <span>*</span></p>
+                                <input type="text" name="city" id="city">
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>District<span>*</span></p>
+                                <input type="text" name="district" id="district">
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>State <span>*</span></p>
+                                <input type="text" name="state" id="state">
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Country <span>*</span></p>
+                                <input type="text" name="country" id="country">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn-danger" type="submit">Submit address</button>
+            </div>
+        </form>
+            <%if(msg!=null){
+                %>
+                <p class="text-danger"><%=msg%></p>
+            <%}%>
+            <p class="error text-danger"></p>
+        </div>
+    </section>
+
+    <%if(message!=null){
+      %>
+      <script>
+          new Swal({
+          title: "Success",
+          text: "<%=message%>",
+          icon: "success",
+          showConfirmButton:false,
+          timer:2000
+        });
+        </script>
+      
+    <%}%>
+    
+<script>
+     const form = document.getElementById('form')
+     const address = document.getElementById("address");
+     const city = document.getElementById("city");
+     const district = document.getElementById("district");
+     const state = document.getElementById("state");
+     const country = document.getElementById("country");
+     const errorElement = document.querySelector('.error');
+  
+    form.addEventListener('submit', (e) => {
+      let messages = [];
+        if (address.value.trim() === "") {
+            messages.push("Address must be filled out")
+        }
+        if (city.value.trim() === "") {
+            messages.push( "City must be filled out")
+        }
+        if (district.value.trim() === "") {
+            messages.push("District must be filled out")
+        }
+        if (state.value.trim() === "") {
+            messages.push("State must be filled out")
+        }
+        if (country.value.trim() === "") {
+            messages.push("Country must be filled out")
+        }
+        if (messages.length > 0) {
+        e.preventDefault();
+        errorElement.innerText = messages.join(', ');
+      }
+    })
+</script>
+
+<%- include('../layouts/pagesFooter.ejs') %>
