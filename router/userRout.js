@@ -68,7 +68,7 @@ user_route.post('/addAddress',auth.logOutSession,userController.addNewAddress)
 
 user_route.get('/placeOrder',auth.logOutSession,userController.loadPlaceOrder)
 
-user_route.get('/orderConfirm',auth.logOutSession,userController.orderConfirm)
+// user_route.get('/orderConfirm',auth.logOutSession,userController.orderConfirm)
 
 user_route.post('/orderConfirm',auth.logOutSession,userController.orderConfirm)
 
@@ -88,7 +88,7 @@ user_route.get('/addToWishlist',auth.logOutSession,userController.addToWishlist)
 
 user_route.get('/removeWishlist',auth.logOutSession,userController.removeWishlist)
 
-user_route.get("/create-payment",auth.logOutSession,userController.createPayment)
+// user_route.get("/create-payment",auth.logOutSession,userController.createPayment)
 
 user_route.post('/checkCoupon',auth.logOutSession,userController.addCoupon)
 

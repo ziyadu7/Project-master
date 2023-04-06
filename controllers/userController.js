@@ -880,25 +880,34 @@ const orderConfirm = async (req, res,next) => {
         const cart = await cartSchema.findOne({ userId: session })
         const user = await User.findOne({_id:session})
         let payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : parseInt(cart.totalPrice)
-        if(user.wallet){
-            if(user.wallet>=payMoney){
-                await User.findByIdAndUpdate({_id:session},{$inc:{wallet:-payMoney}})
-            }else{
-                await User.findByIdAndUpdate({_id:session},{$set:{wallet:0}})
-            }
-        }
+        
         req.session.payMoney = payMoney
         if (payment.flexRadioDefault == 'cashOn') {
+            if(user.wallet){
+                if(user.wallet>=payMoney){
+                    await User.findByIdAndUpdate({_id:session},{$inc:{wallet:-payMoney}})
+                }else{
+                    await User.findByIdAndUpdate({_id:session},{$set:{wallet:0}})
+                }
+            }
             orderStatus = 1
             res.redirect('/userProfile')
             message = 'Your order started shipping'
         }else if(payment.flexRadioDefault == 'Wallet'){
+            if(user.wallet){
+                if(user.wallet>=payMoney){
+                    await User.findByIdAndUpdate({_id:session},{$inc:{wallet:-payMoney}})
+                }else{
+                    await User.findByIdAndUpdate({_id:session},{$set:{wallet:0}})
+                }
+            }
             orderStatus = 1
             res.redirect('/userProfile')
             message = 'Your order started shipping'
         }else if (payment.flexRadioDefault == 'online') {
-
-            {
+            if(user.wallet){
+                    payMoney = payMoney-user.wallet
+            }
                 const currencyMap = {
                     840: "USD",
                     978: "EUR",
@@ -911,7 +920,7 @@ const orderConfirm = async (req, res,next) => {
                     total: payMoney,
                 };
 
-                orderStatus = 1;
+                
                 const create_payment_json = {
                     intent: "sale",
                     payer: {
@@ -940,9 +949,6 @@ const orderConfirm = async (req, res,next) => {
                         }
                     }
                 });
-            }
-
-
 
         } else {
             res.redirect('/placeOrder')
@@ -959,19 +965,26 @@ const orderConfirm = async (req, res,next) => {
 ///////////////CONFIRM PAYMENT////////////////
 
 const confirmPayment = async (req, res,next) => {    
-    try {
-        const payerId = req.query.PayerID;
+    const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
     const session = req.session.user_id
     const cart = await cartSchema.findOne({ userId: session })
-    const payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : cart.totalPrice
+    const user = await User.findOne({_id:session})
+    // const payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : cart.totalPrice
+    if(user.wallet){
+        if(user.wallet>=req.session.payMoney){
+            await User.findByIdAndUpdate({_id:session},{$inc:{wallet:req.session.payMoney}})
+        }else{
+            await User.findByIdAndUpdate({_id:session},{$set:{wallet:0}})
+        }
+    }
     const execute_payment_json = {
         payer_id: payerId,
         transactions: [
             {
                 amount: {
                     currency: "USD",
-                    total: payMoney,
+                    total: req.session.payMoney,
                 },
             },
         ],
@@ -986,53 +999,49 @@ const confirmPayment = async (req, res,next) => {
                 throw error;
             } else {
                 console.log(JSON.stringify(payment));
+                orderStatus = 1;
                 res.redirect("/userProfile");
                 message = 'Order started shipping'
             }
         }
     );
-    } catch (error) {
-        console.log(error);
-        next(error.message)
-    }
-    
 };
 
 
 /////////CREATE PAYMENT//////////////
 
-const createPayment = async (req, res,next) => {
-    try {
-        const payerId = req.query.PayerID;
-        const paymentId = req.query.paymentId;
-        const cart = await cartSchema.findOne({ userId: session })
-        const payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : cart.totalPrice
-        const executePaymentJSON = {
-            payer_id: payerId,
-            transactions: [
-                {
-                    amount: {
-                        currency: "USD",
-                        total: payMoney,
-                    },
-                },
-            ],
-        };
+// const createPayment = async (req, res,next) => {
+//     try {
+//         const payerId = req.query.PayerID;
+//         const paymentId = req.query.paymentId;
+//         const cart = await cartSchema.findOne({ userId: session })
+//         const payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : cart.totalPrice
+//         const executePaymentJSON = {
+//             payer_id: payerId,
+//             transactions: [
+//                 {
+//                     amount: {
+//                         currency: "USD",
+//                         total: payMoney,
+//                     },
+//                 },
+//             ],
+//         };
     
-        try {
-            const payment = await paypal.payment.execute(paymentId, executePaymentJSON);
-            console.log(JSON.stringify(payment));
-            res.send("Success");
-        } catch (error) {
-            console.log(error.response);
-            throw error;
-        }
-    } catch (error) {
-        console.log(error);
-        next(error.message)
-    }
+//         try {
+//             const payment = await paypal.payment.execute(paymentId, executePaymentJSON);
+//             console.log(JSON.stringify(payment));
+//             res.send("Success");
+//         } catch (error) {
+//             console.log(error.response);
+//             throw error;
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         next(error.message)
+//     }
    
-}
+// }
 
 ///////////////SHOW ORDERS/////////////
 
@@ -1447,7 +1456,7 @@ module.exports = {
     loadWishList,
     addToWishlist,
     removeWishlist,
-    createPayment,
+    // createPayment,
     addCoupon,
     confirmPayment,
     productFilter,
