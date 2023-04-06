@@ -881,6 +881,9 @@ const orderConfirm = async (req, res,next) => {
             if(user.wallet>=payMoney){
                 payMoney = 0
                 await User.findByIdAndUpdate({_id:session},{$inc:{wallet:-payMoney}})
+                orderStatus = 1
+                res.redirect('/userProfile')
+                message = 'Your order started shipping'
             }else{
                 payMoney = payMoney - user.wallet
                 await User.findByIdAndUpdate({_id:session},{$set:{wallet:0}})
