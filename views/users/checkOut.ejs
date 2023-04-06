@@ -134,6 +134,10 @@
                                     <div class="checkout__order__total">
                                         <ul>
                                             <li>Subtotal <span>Rs <%=cart.totalPrice%></span></li>
+                                            <%if(user.wallet){%>
+                                                <li>Wallet <span>Rs <%=user.wallet%></span></li>
+                                            <%}%>
+                                            
                                             <%if(cart.couponDiscount){%>
                                                 <li>
                                                     <a id="dicount"
@@ -156,6 +160,7 @@
                                                     <li>Total <span class="totalPrice">Rs <%=cart.totalPrice%></span>
                                                     </li>
                                                     <%}%>
+
 
                                         </ul>
                                     </div>
@@ -181,7 +186,7 @@
                         <form id="coupon-form-submit">
                             <div class="d-flex justify-content-center"><input type="text" style="height: 30px; width: 200px;"
                                     placeholder="Enter coupon code" id="coupon" name="coupon">
-                                <button class="btn-primary ms-4" type="submit" form="coupon-form-submit"> Apply
+                                <button class="btn-primary ms-4" type="submit" form="coupon-form-submit" id="applyCoupon"> Apply
                                     Coupon</button>
                             </div>
                             <div class="d-flex justify-content-center">
@@ -303,6 +308,9 @@
                                     <div class="checkout__order__total">
                                         <ul>
                                             <li>Subtotal <span>Rs <%=cart.totalPrice%></span></li>
+                                            <%if(user.wallet){%>
+                                                <li>Wallet <span class="text-muted">Rs <%=user.wallet%></span></li>
+                                            <%}%>
                                             <%if(cart.couponDiscount){%>
                                                 <li>
                                                     <a id="dicount"
@@ -432,6 +440,7 @@
                                         document.getElementsByClassName('totalPrice').innerText = 'Rs' + response.amount;
                                         document.getElementById('codestate').style.color = "green"
                                         document.getElementById('codestate').innerText = 'Coupon applied successfully'
+                                        $("#applyCoupon").hide()
                                     } else if (response.used) {
                                         document.getElementById('codestate').style.color = "red"
                                         document.getElementById('codestate').innerText = 'Coupon already used!'

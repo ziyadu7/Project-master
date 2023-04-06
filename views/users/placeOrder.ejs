@@ -7,7 +7,27 @@
                         <span><b> Payment Method</b></span>
                         <div class="card mt-3">
                             <div class="accordion" id="accordionExample">
-                                <div class="card" style="justify-content: space-between;">
+                                <%if(walletPay==true){%>
+                                    <div class="card" style="justify-content: space-between;">
+                                    <div class="card-header p-0" id="">
+                                        <h2 class="mb-0">
+                                            <button
+                                                class="btn btn-light btn-block text-left  p-3 rounded-0 border-bottom-custom"
+                                                type="button" data-toggle="collapse" data-target="#collapseTwo"
+                                                aria-expanded="false" aria-controls="collapseTwo">
+                                                <div class="d-flex justify-content-between ms-2">
+                                                    <input class="form-check-input" type="radio" value="Wallet"
+                                                        name="flexRadioDefault" id="flexRadioDefault1">
+                                                    <label class="form-check-label" for="flexRadioDefault1"><br><span>
+                                                            Wallet</span>
+                                                    </label>
+                                                </div>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                </div>
+                                <%}else{%>
+                                    <div class="card" style="justify-content: space-between;">
                                     <div class="card-header p-0" id="">
                                         <h2 class="mb-0">
                                             <button
@@ -45,6 +65,8 @@
                                         </h2>
                                     </div>
                                 </div>
+                                    <%}%>
+                               
                             </div>
                         </div>
                     </div>

@@ -836,10 +836,12 @@ const loadPlaceOrder = async (req, res,next) => {
         const pro = await cartSchema.findOne({ userId: session }, { _id: 0 })
         const user = await User.findOne({_id:session})
         const wallet = user.wallet
+        let walletPay = false
         if (pro.couponDiscount) {
             Total = parseInt(pro.totalPrice) - pro.couponDiscount
             if(user.wallet){
                 if(user.wallet>=Total){
+                    walletPay = true
                     Total = 0
                 }else{
                     Total = Total-user.wallet
@@ -850,6 +852,7 @@ const loadPlaceOrder = async (req, res,next) => {
             Total = parseInt(pro.totalPrice)
             if(user.wallet){
                 if(user.wallet>=Total){
+                    walletPay = true
                     Total = 0
                 }else{
                     Total = Total-user.wallet
@@ -857,8 +860,8 @@ const loadPlaceOrder = async (req, res,next) => {
             }
             
         }
-
-        res.render('placeOrder', { Total, session, msg,pro,wallet})
+        console.log(wallet);
+        res.render('placeOrder', { Total, session, msg,pro,wallet,walletPay})
         msg = null
     } catch (error) {
         console.log(error.mesage);
@@ -879,13 +882,8 @@ const orderConfirm = async (req, res,next) => {
         let payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : parseInt(cart.totalPrice)
         if(user.wallet){
             if(user.wallet>=payMoney){
-                payMoney = 0
                 await User.findByIdAndUpdate({_id:session},{$inc:{wallet:-payMoney}})
-                orderStatus = 1
-                res.redirect('/userProfile')
-                message = 'Your order started shipping'
             }else{
-                payMoney = payMoney - user.wallet
                 await User.findByIdAndUpdate({_id:session},{$set:{wallet:0}})
             }
         }
@@ -894,7 +892,11 @@ const orderConfirm = async (req, res,next) => {
             orderStatus = 1
             res.redirect('/userProfile')
             message = 'Your order started shipping'
-        } else if (payment.flexRadioDefault == 'online') {
+        }else if(payment.flexRadioDefault == 'Wallet'){
+            orderStatus = 1
+            res.redirect('/userProfile')
+            message = 'Your order started shipping'
+        }else if (payment.flexRadioDefault == 'online') {
 
             {
                 const currencyMap = {
@@ -1091,8 +1093,17 @@ const loadOrderHistory = async (req, res,next) => {
 const cancelOrder = async (req, res,next) => {
     try {
         const orderId = req.query.orderid
+        const session = req.session.user_id
         const orders = await orderSchema.findOne({ _id: orderId }).populate('item.product')
+        const user = await User.findOne({_id:session})
         await orderSchema.updateOne({ _id: orderId }, { $set: { user_cancelled: true } })
+        if(orders.paymentType=='online'||orders.paymentType=='Wallet'){
+            if(user.wallet){
+                await User.findByIdAndUpdate({_id:session},{$inc:{wallet:orders.totalPrice}})
+            }else{
+                await User.findByIdAndUpdate({_id:session},{$set:{wallet:orders.totalPrice}})
+            }
+        }
         orders.item.forEach(async (item) => {
             const productId = item.product._id
             const quantity = item.quantity

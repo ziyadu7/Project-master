@@ -630,6 +630,14 @@ const cancelOrder = async (req, res) => {
         const orderId = req.query.orderid
         await orderSchema.updateOne({ _id: orderId }, { $set: { admin_cancelled: true } })
         const orders = await orderSchema.findOne({_id:orderId}).populate('item.product')
+        const user = await userSchema.findOne({_id:orders.userId})
+        if(orders.paymentType=='online'||orders.paymentType=='Wallet'){
+            if(user.wallet){
+                await userSchema.findByIdAndUpdate({_id:orders.userId},{$inc:{wallet:orders.totalPrice}})
+            }else{
+                await userSchema.findByIdAndUpdate({_id:orders.userId},{$set:{wallet:orders.totalPrice}})
+            }
+        }
         orders.item.forEach(async (item) => {
             const productId = item.product._id
             const quantity = item.quantity
