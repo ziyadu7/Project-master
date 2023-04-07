@@ -32,6 +32,7 @@ app.use('/admin', adminRout)
 app.use((err,req,res,next)=>{
     res.status(err.status||500)
     res.render('error',{err})
+    console.log(err)
 })
 
 app.listen(process.env.PORT, () => {
