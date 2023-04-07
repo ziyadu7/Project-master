@@ -37,7 +37,6 @@ const userSchema = mongoose.Schema({
         ref:'Products'
     }],wallet:{
         type:Number,
-        required:true
     }
 })
 
