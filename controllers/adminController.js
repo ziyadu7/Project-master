@@ -813,7 +813,7 @@ const addBanner = async(req,res)=>{
         const ban = req.body
         const old = await bannerSchema.find()
         console.log(old);
-        if(old==null){
+        if(old.length==0||old==undefined){
             const banner = new bannerSchema({
                 heading1:ban.heading1,
                 heading2:ban.heading2,

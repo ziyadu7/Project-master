@@ -4,6 +4,7 @@ const adminController = require('../controllers/adminController')
 const auth = require('../middleware/authAdmin')
 
 const upload = multer.createMulter()
+const uploadBanner = multer.bannerMulter()
 const admin_rout = express()
 
 admin_rout.set('view engine', 'ejs')
@@ -69,7 +70,7 @@ admin_rout.get('/banner',auth.logOutSession,adminController.bannersPage)
 
 admin_rout.get('/addBanner',auth.logOutSession,adminController.loadAddBanner)
 
-admin_rout.post('/addBanner',upload.single('image'),adminController.addBanner)
+admin_rout.post('/addBanner',uploadBanner.single('image'),adminController.addBanner)
 
 admin_rout.get('/deleteBanner',auth.logOutSession,adminController.deleteBanner)
 
