@@ -327,10 +327,11 @@ const editProfile = async (req, res,next) => {
         const index2 = req.query.index
         const key = `address.${index2}`
         console.log(index2);
-        if (req.file) {
-            await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
-        }
+        
         if (index2) {
+            if (req.file) {
+                await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
+            }
             const editaddress = {
                 address: data.address,
                 city: data.city,
@@ -348,6 +349,9 @@ const editProfile = async (req, res,next) => {
                 msg = 'Fill all the fields'
             }
         } else {
+            if (req.file) {
+                await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
+            }
             if (data.address && data.city && data.district && data.state && data.country) {
                 await User.updateOne({ _id: new Object(id) }, {
                     $set: {
@@ -364,8 +368,15 @@ const editProfile = async (req, res,next) => {
                 res.redirect('/userProfile')
                 message = 'Profile updated successfully'
             } else {
-                res.redirect('/editProfile')
-                msg = 'Fill all the fields'
+                if (req.file) {
+                    await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
+                    res.redirect('/userProfile')
+                    message = 'Profile Image edited successfully'
+                }else{
+                    res.redirect('/editProfile')
+                    msg = 'Fill all the fields'
+                }
+                
             }
         }
 
