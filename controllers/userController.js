@@ -1144,7 +1144,6 @@ const returnOrder = async (req, res,next) => {
         const orderId = req.query.id
         const userId = req.session.user_id
         const order = await orderSchema.findOne({ _id: orderId })
-        const sale = await salesSchema.find({ orders: orderId })
         const user = await User.findOne({_id:userId})
         const Price = order.totalPrice
         if(user.wallet){
@@ -1152,6 +1151,11 @@ const returnOrder = async (req, res,next) => {
         }else{
             await User.findByIdAndUpdate({_id:userId},{$set:{wallet:Price}})
         }
+        order.item.forEach(async (item) => {
+            const productId = item.product._id
+            const quantity = item.quantity
+            await productSchema.updateOne({ _id: productId }, { $inc: { stocks: quantity } })
+        });
         await salesSchema.deleteOne({orders:orderId})
         await orderSchema.findByIdAndDelete({_id:orderId})
         
@@ -1466,7 +1470,6 @@ module.exports = {
     loadWishList,
     addToWishlist,
     removeWishlist,
-    // createPayment,
     addCoupon,
     confirmPayment,
     productFilter,
