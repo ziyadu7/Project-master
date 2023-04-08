@@ -6,7 +6,6 @@ const salesSchema = require('../models/salesReport')
 const couponSchema = require('../models/couponModel')
 const bannerSchema = require('../models/bannerModel')
 const nodemailer = require('nodemailer')
-const session = require('express-session')
 const moment = require('moment');
 const bcrypt = require('bcrypt')
 const sharp = require('sharp')

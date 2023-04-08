@@ -74,6 +74,7 @@ admin_rout.post('/addBanner',uploadBanner.single('image'),adminController.addBan
 
 admin_rout.get('/deleteBanner',auth.logOutSession,adminController.deleteBanner)
 
+admin_rout.get("*",auth.logOutSession,adminController.loadAdminHome)
 
 
 module.exports = admin_rout

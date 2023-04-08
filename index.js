@@ -29,9 +29,16 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', userRout)
 app.use('/admin', adminRout)
+
 app.use((err,req,res,next)=>{
     res.status(err.status||500)
     res.render('error',{err})
+    console.log(err)
+})
+
+app.use((req,res,next)=>{
+    res.status(500)
+    res.render('error')
     console.log(err)
 })
 

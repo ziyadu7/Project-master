@@ -88,8 +88,6 @@ user_route.get('/addToWishlist',auth.logOutSession,userController.addToWishlist)
 
 user_route.get('/removeWishlist',auth.logOutSession,userController.removeWishlist)
 
-// user_route.get("/create-payment",auth.logOutSession,userController.createPayment)
-
 user_route.post('/checkCoupon',auth.logOutSession,userController.addCoupon)
 
 user_route.get('/success',auth.logOutSession,userController.confirmPayment)
@@ -99,6 +97,8 @@ user_route.post('/shopFilter',userController.productFilter)
 user_route.get('/orderHistory',auth.logOutSession,userController.loadOrderHistory)
 
 user_route.get('/returnOrder',auth.logOutSession,userController.returnOrder)
+
+
 
 
 module.exports = user_route

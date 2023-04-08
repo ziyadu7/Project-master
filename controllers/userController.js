@@ -7,7 +7,6 @@ const bannerSchema = require('../models/bannerModel')
 const salesSchema = require('../models/salesReport')
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
-const session = require('express-session')
 const categoryModel = require('../models/categoryModel')
 require('dotenv').config();
 
