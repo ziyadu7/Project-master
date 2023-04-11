@@ -68,8 +68,6 @@ user_route.post('/addAddress',auth.logOutSession,userController.addNewAddress)
 
 user_route.get('/placeOrder',auth.logOutSession,userController.loadPlaceOrder)
 
-// user_route.get('/orderConfirm',auth.logOutSession,userController.orderConfirm)
-
 user_route.post('/orderConfirm',auth.logOutSession,userController.orderConfirm)
 
 user_route.get('/orders',auth.logOutSession,userController.showOrders)
@@ -97,8 +95,6 @@ user_route.post('/shopFilter',userController.productFilter)
 user_route.get('/orderHistory',auth.logOutSession,userController.loadOrderHistory)
 
 user_route.get('/returnOrder',auth.logOutSession,userController.returnOrder)
-
-
 
 
 module.exports = user_route

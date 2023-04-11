@@ -20,22 +20,22 @@
 
                                                         <div
                                                             class="row mb-4 d-flex justify-content-between align-items-center">
-                                                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                                            <div class="col-md-2 col-lg-2 col-xl-2 mb-3">
                                                                 <img src="/proImage/<%=item.image[0]%>"
                                                                     class="img-fluid rounded-3" alt="Cotton T-shirt">
                                                             </div>
-                                                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                                            <div class="col-md-3 col-lg-3 col-xl-3 mb-3">
                                                                 <h6 class="text-muted">
                                                                     <%=item.title%>
                                                                 </h6>
                                                             </div>
-                                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1 mb-3">
                                                                 <h6 class="mb-0" id="productTotal<%=item._id%>">₹
                                                                     <%=item.price%>
                                                                 </h6>
                                                             </div>
                                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                                <td class="cart__close"><a
+                                                                <td class="cart__close mr-3"><a
                                                                         href="/removeWishlist?id=<%=item._id%>"><span><svg
                                                                                 xmlns="http://www.w3.org/2000/svg"
                                                                                 width="24" height="24"
@@ -43,10 +43,12 @@
                                                                                 <path fill="currentColor"
                                                                                     d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z" />
                                                                             </svg></span></a></td>
+                                                                            <td class="cart__close ml-3" ><a href="/addToCart?id=<%=item._id%>" ><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                                                                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                                                                  </svg></span></a></td>
                                                             </div>
                                                             <div class="col-md-1 col-lg-1 col-xl-1">
-                                                                <td class="cart__close"><a href="/addToCart?id=<%=item._id%>"><span
-                                                                            class="icon_bag_alt"></span></a></td>
+                                                               
                                                             </div>
                                                         </div>
 

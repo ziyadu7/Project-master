@@ -11,7 +11,7 @@
                         <% if (user==undefined) { %>
                             <% } else { %>
                                 <% for (let i=0; i <user.address.length; i++) { %>
-                                    <div class="col-lg-">
+                                    <div class="col-lg">
                                         <div class="checkout__order text-center">
                                             <div class="checkout__order__product ">
                                                 <ul>
@@ -29,7 +29,7 @@
                                             <br><a href="/editProfile?index=<%= i %>"
                                                     class="site-btn1">Select</a>
                                         </div>
-                                    </div>
+                                    </div><br>
                                     <% } %>
                                         <% } %>
                                             <div class="row text-center mt-4 mb-4">

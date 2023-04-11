@@ -49,4 +49,16 @@
 </div>
 </div>
 </div>
+
+  
+<%if(message){%>
+    <script>
+        new Swal({
+            title: "Success",
+            text: "<%=message%>",
+            icon: "success",
+        });
+    </script>
+    <%}%>
+  
 <%- include('../layouts/pagesFooter.ejs') %>

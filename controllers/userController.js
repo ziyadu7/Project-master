@@ -325,60 +325,65 @@ const editProfile = async (req, res,next) => {
         const id = req.session.user_id
         const index2 = req.query.index
         const key = `address.${index2}`
-        console.log(index2);
-        
-        if (index2) {
-            if (req.file) {
-                await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
-            }
-            const editaddress = {
-                address: data.address,
-                city: data.city,
-                district: data.district,
-                state: data.state,
-                country: data.country
-            }
-            if (data.address && data.city && data.district && data.state && data.country) {
-                await User.updateOne({ _id: new Object(id) }, { $set: { [key]: editaddress } })
-                await User.updateOne({ _id: new Object(id) }, { $set: { username: data.username, email: data.email, phone: data.phone } })
-                res.redirect('/userProfile')
-                message = 'Profile updated successfully'
-            } else {
+        console.log(index2,data.address.trim());
+        if(data.username.trim()==''||data.phone.trim()==''||data.address.trim()==''||data.city.trim()==''||data.district.trim()==''||data.state.trim()==''||data.country.trim()==''){
                 res.redirect('/editProfile')
                 msg = 'Fill all the fields'
-            }
-        } else {
-            if (req.file) {
-                await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
-            }
-            if (data.address && data.city && data.district && data.state && data.country) {
-                await User.updateOne({ _id: new Object(id) }, {
-                    $set: {
-                        'address.0': {
-                            address: data.address,
-                            city: data.city,
-                            district: data.district,
-                            state: data.state,
-                            country: data.country
-                        }
-                    }
-                })
-                await User.updateOne({ _id: new Object(id) }, { $set: { username: data.username, email: data.email, phone: data.phone } })
-                res.redirect('/userProfile')
-                message = 'Profile updated successfully'
-            } else {
+        }else{
+            if (index2) {
                 if (req.file) {
                     await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
+                }
+                const editaddress = {
+                    address: data.address,
+                    city: data.city,
+                    district: data.district,
+                    state: data.state,
+                    country: data.country
+                }
+                if (data.address && data.city && data.district && data.state && data.country) {
+                    await User.updateOne({ _id: new Object(id) }, { $set: { [key]: editaddress } })
+                    await User.updateOne({ _id: new Object(id) }, { $set: { username: data.username, phone: data.phone } })
                     res.redirect('/userProfile')
-                    message = 'Profile Image edited successfully'
-                }else{
+                    message = 'Profile updated successfully'
+                } else {
                     res.redirect('/editProfile')
                     msg = 'Fill all the fields'
                 }
-                
+            } else {
+                if (req.file) {
+                    await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
+                }
+                if (data.address && data.city && data.district && data.state && data.country) {
+                    await User.updateOne({ _id: new Object(id) }, {
+                        $set: {
+                            'address.0': {
+                                address: data.address,
+                                city: data.city,
+                                district: data.district,
+                                state: data.state,
+                                country: data.country
+                            }
+                        }
+                    })
+                    await User.updateOne({ _id: new Object(id) }, { $set: { username: data.username, phone: data.phone } })
+                    res.redirect('/userProfile')
+                    message = 'Profile updated successfully'
+                } else {
+                    if (req.file) {
+                        await User.updateOne({ _id: new Object(id) }, { $set: { image: req.file.filename } })
+                        res.redirect('/userProfile')
+                        message = 'Profile Image edited successfully'
+                    }else{
+                        res.redirect('/editProfile')
+                        msg = 'Fill all the fields'
+                    }
+                    
+                }
             }
+    
         }
-
+        
     } catch (error) {
         console.log(error);
         next(error.message)
@@ -1474,5 +1479,5 @@ module.exports = {
     confirmPayment,
     productFilter,
     loadOrderHistory,
-    returnOrder
+    returnOrder,
 }

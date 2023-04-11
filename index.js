@@ -1,4 +1,3 @@
-// const mongoose = require('mongoose')
 const morgan = require('morgan')
 const userRout = require('./router/userRout')
 const adminRout = require('./router/adminRout')
@@ -10,13 +9,9 @@ const config = require('./config/config')
 require('dotenv').config();
 
 config.mongooseConnection()
-// const cookieParser = require('cookie-parser')
-
-// mongoose.set('strictQuery', false)
-// mongoose.connect('mongodb://127.0.0.1:27017/project')
 
 const express = require('express')
-// const { config } = require('dotenv')
+
 const app = express()
 app.use(morgan("dev"));
 app.use(nocache())
@@ -39,7 +34,6 @@ app.use((err,req,res,next)=>{
 app.use((req,res,next)=>{
     res.status(500)
     res.render('error')
-    console.log(err)
 })
 
 app.listen(process.env.PORT, () => {

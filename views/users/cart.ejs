@@ -14,7 +14,6 @@
                 <div class="col-lg-8">
                   <div class="p-5">
                     <div class="d-flex justify-content-between align-items-center mb-5">
-                      <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
                     </div>
                     <%if(cartProducts==undefined){%>
                         <%}else{%>
@@ -23,20 +22,20 @@
                                     <%if(item.product.is_show===true){%>
   
                     <div class="row mb-4 d-flex justify-content-between align-items-center">
-                      <div class="col-md-2 col-lg-2 col-xl-2">
+                      <div class="col-md-2 col-lg-2 col-xl-2 mb-3">
                         <img
                           src="/proImage/<%=item.product.image[0]%>"
-                          class="img-fluid rounded-3" alt="Cotton T-shirt">
+                          class="img-fluid rounded-3" alt="">
                       </div>
-                      <div class="col-md-3 col-lg-3 col-xl-3">
+                      <div class="col-md-3 col-lg-3 col-xl-3 mb-3">
                         <h6 class="text-muted"><%=item.product.title%></h6>
                       </div>
-                      <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                      <div class="col-md-3 col-lg-3 col-xl-2 d-flex mb-3">
                         <button class="quantity__minus" data-id="<%=item._id%>" data-index="">-</button>
                         <h5 id="quantity-" class="ml-3 mr-3"><%=item.quantity%></h5>
                         <button class="quantity__plus" data-id="<%=item._id%>" data-index="">+</button>
                       </div>
-                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1 mb-3">
                         <h6 class="mb-0" id="productTotal<%=item._id%>">₹ <%=item.price*item.quantity%></h6>
                       </div>
                       <div class="col-md-1 col-lg-1 col-xl-1 text-end">

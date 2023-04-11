@@ -15,7 +15,6 @@ require('dotenv').config();
 
 let msg
 let message
-let sw
 
 ////////LOGIN PAGE LODING////////////
 
@@ -471,7 +470,7 @@ const editProduct = async (req, res) => {
             res.redirect('/admin/products')
         } else {
             let newprod
-            if (req.files !== 0) {
+            if (req.files.length !== 0) {
                 let image = req.files.map(file => file);
                 for (i = 0; i < image.length; i++) {
                     let path = image[i].path
@@ -511,7 +510,18 @@ const editProduct = async (req, res) => {
                         image: req.files.map(file => file.filename)
                     }
                 })
-            } 
+            }else{
+                newprod = await productSchema.updateOne({ _id: new Object(id) }, {
+                    $set: {
+                        title: prod.title,
+                        brand: prod.brand,
+                        description: prod.description,
+                        category: catId._id,
+                        stocks: prod.stocks,
+                        price: prod.price,
+                    }
+                })
+            }
             message = 'Product edited successfully'
             res.redirect('/admin/products')
         }
@@ -811,7 +821,6 @@ const addBanner = async(req,res)=>{
     try {
         const ban = req.body
         const old = await bannerSchema.find()
-        console.log(old);
         if(old.length==0||old==undefined){
             const banner = new bannerSchema({
                 heading1:ban.heading1,
