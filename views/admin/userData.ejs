@@ -144,11 +144,12 @@
                             </thead>
 
                             <tbody>
+                                <%let x = (page-1)*6%>
                                 <% if(users.length>0){
                                     for(let i=0;i<users.length;i++){ %>
                                         <tr scope="row">
                                             <td>
-                                                <%=i+1%>
+                                                <%=x+1+i%>
                                             </td>
                                             <td>
                                                 <%=users[i].username%>

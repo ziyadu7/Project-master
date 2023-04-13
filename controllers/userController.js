@@ -325,7 +325,6 @@ const editProfile = async (req, res,next) => {
         const id = req.session.user_id
         const index2 = req.query.index
         const key = `address.${index2}`
-        console.log(index2,data.address.trim());
         if(data.username.trim()==''||data.phone.trim()==''||data.address.trim()==''||data.city.trim()==''||data.district.trim()==''||data.state.trim()==''||data.country.trim()==''){
                 res.redirect('/editProfile')
                 msg = 'Fill all the fields'
@@ -875,7 +874,6 @@ const loadPlaceOrder = async (req, res,next) => {
             }
             
         }
-        console.log(wallet);
         res.render('placeOrder', { Total, session, msg,pro,wallet,walletPay})
         msg = null
     } catch (error) {
@@ -985,7 +983,6 @@ const confirmPayment = async (req, res,next) => {
     const session = req.session.user_id
     const cart = await cartSchema.findOne({ userId: session })
     const user = await User.findOne({_id:session})
-    // const payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : cart.totalPrice
     if(user.wallet){
         if(user.wallet>=req.session.payMoney){
             await User.findByIdAndUpdate({_id:session},{$inc:{wallet:req.session.payMoney}})
@@ -1013,7 +1010,6 @@ const confirmPayment = async (req, res,next) => {
                 console.log(error.response);
                 throw error;
             } else {
-                console.log(JSON.stringify(payment));
                 orderStatus = 1;
                 res.redirect("/userProfile");
                 message = 'Order started shipping'
@@ -1022,41 +1018,6 @@ const confirmPayment = async (req, res,next) => {
     );
 };
 
-
-/////////CREATE PAYMENT//////////////
-
-// const createPayment = async (req, res,next) => {
-//     try {
-//         const payerId = req.query.PayerID;
-//         const paymentId = req.query.paymentId;
-//         const cart = await cartSchema.findOne({ userId: session })
-//         const payMoney = cart.couponDiscount ? parseInt(cart.totalPrice) - cart.couponDiscount : cart.totalPrice
-//         const executePaymentJSON = {
-//             payer_id: payerId,
-//             transactions: [
-//                 {
-//                     amount: {
-//                         currency: "USD",
-//                         total: payMoney,
-//                     },
-//                 },
-//             ],
-//         };
-    
-//         try {
-//             const payment = await paypal.payment.execute(paymentId, executePaymentJSON);
-//             console.log(JSON.stringify(payment));
-//             res.send("Success");
-//         } catch (error) {
-//             console.log(error.response);
-//             throw error;
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         next(error.message)
-//     }
-   
-// }
 
 ///////////////SHOW ORDERS/////////////
 

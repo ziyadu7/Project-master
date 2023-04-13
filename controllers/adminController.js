@@ -198,7 +198,7 @@ const loadSalesPage = async (req, res) => {
             sales = await salesSchema.find().populate('userId').limit(6).skip((page - 1) * 6).exec()
             count = await salesSchema.find().countDocuments()
         }
-      res.render('salesReport', { sales,totalPages: Math.ceil(count / 6)});
+      res.render('salesReport', { sales,page,totalPages: Math.ceil(count / 6)});
     } catch (error) {
       console.log(error.message);
     }
@@ -260,7 +260,7 @@ const loadUserData = async (req, res) => {
                 userData[i].Status = 'Blocked'
             }
         }
-        res.render('userData', { users: userData, totalPages: Math.ceil(count / limit), currentPage: page })
+        res.render('userData', { users: userData,page, totalPages: Math.ceil(count / limit), currentPage: page })
     } catch (error) {
         console.log(error);
     }

@@ -104,13 +104,11 @@ const plusBtns = document.querySelectorAll('.quantity__plus');
 plusBtns.forEach(btn => {
     btn.addEventListener('click', function(event) {
         event.preventDefault();
-        console.log('Button clicked');
         const proid = event.target.dataset.id;
         const userId = '<%=session%>';
         fetch(`/incrementCart?id=${proid}&userId=${userId}`)
         .then(res => res.json())
         .then(data => {
-            // Update the quantity displayed on the page
             
             const quantityEl = event.target.parentElement.querySelector('#quantity-');
             quantityEl.innerText = data.quantity;
@@ -126,13 +124,11 @@ const minusBtns = document.querySelectorAll('.quantity__minus');
 minusBtns.forEach(btn => {
     btn.addEventListener('click', function(event) {
         event.preventDefault();
-        console.log('Button clicked');
         const proid = event.target.dataset.id;
         const userId = '<%=session%>';
         fetch(`/decrementcart?id=${proid}&userId=${userId}`)
         .then(res => res.json())
         .then(data => {
-            // Update the quantity displayed on the page
             
             const quantityEl = event.target.parentElement.querySelector('#quantity-');
             quantityEl.innerText = data.quantity;

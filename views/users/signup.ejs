@@ -112,7 +112,7 @@
       let messages = [];
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const phoneRegex = /^\d{10}$/;
-      const regex_password = /^(?=.?[A-Z])(?=.[a-z])(?=.*[0-9]){8,16}/gm
+      const regex_password = /^(?=.*?[A-Z])(?=.*[a-z])(?=.*[0-9]){8,16}/gm
       if(usernameInput.value.trim().length === 0 && phoneInput.value.trim().length === 0 && emailInput.value.trim().length === 0 && passwordInput.value.trim().length === 0 && RpasswordInput.value.trim().length === 0){
         messages.push('Please fill all the forms');
       }else if (usernameInput.value.trim().length === 0) {

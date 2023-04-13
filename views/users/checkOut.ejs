@@ -403,12 +403,10 @@
                 <%}%>
 
                     <script>
-                        // Open the popup window
                         function openPopup() {
                             document.getElementById("couponPopup").style.display = "block";
                         }
 
-                        // Close the popup window
                         function closePopup() {
                             document.getElementById("couponPopup").style.display = "none";
                         }
@@ -430,12 +428,10 @@
                                 data: { coupon: couponValue },
                                 success: (response) => {
                                     if (response.status) {
-                                        console.log(response.discountPrice)
                                         $("#total").load(location.href + " #total");
                                         $("#discount1").val(response.discountPrice);
                                         $("#coupon1").val(couponValue);
                                         document.getElementById('disc').innerText = 'Rs' + response.discountPrice
-                                        console.log(response.amount);
                                         document.getElementById('ok').innerText = 'Rs' + response.amount
                                         document.getElementsByClassName('totalPrice').innerText = 'Rs' + response.amount;
                                         document.getElementById('codestate').style.color = "green"

@@ -31,11 +31,7 @@ crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <!-- CSS -->
-<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css"> -->
 
-<!-- JavaScript/jQuery -->
-<!-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script> -->
     
     <!-- template-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
@@ -387,18 +383,6 @@ crossorigin="anonymous"></script>
             </div>
 			<div class="table-filter">
 				<div class="row">
-                    <!-- <div class="col-sm-3">
-						<div class="show-entries">
-							<span>Show</span>
-							<select class="form-control">
-								<option>5</option>
-								<option>10</option>
-								<option>15</option>
-								<option>20+</option>
-							</select>
-							<span>entries</span>
-						</div>
-					</div> -->
                     <form id="sales-filter">
                         <label for="filter">Filter by:</label>
                         <select id="filter" name="filter">
@@ -421,12 +405,13 @@ crossorigin="anonymous"></script>
                     </tr>
                 </thead>
                 <tbody>
+                  <%let x = (page-1)*6%>
                     <%if(sales!=0){%>
                         <%let i=1%>
                         <%sales.forEach(sales => {%>
                             <tr>
                                
-                                <td><%=i%></td>
+                                <td><%=x+i%></td>
                                 <td><%=sales.userId.username%></td>
                                 <td><%=sales.location%></td>
                                 <td><%=sales.date.toDateString()%></td>                        
