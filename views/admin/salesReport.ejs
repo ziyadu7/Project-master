@@ -394,40 +394,43 @@ crossorigin="anonymous"></script>
                       </form>
                 </div>
 			</div>
-            <table class="table" id="salesTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Customer</th>
-						<th>Location</th>
-						<th>Order Date</th>						
-						<th>Net Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <%let x = (page-1)*6%>
-                    <%if(sales!=0){%>
-                        <%let i=1%>
-                        <%sales.forEach(sales => {%>
-                            <tr>
-                               
-                                <td><%=x+i%></td>
-                                <td><%=sales.userId.username%></td>
-                                <td><%=sales.location%></td>
-                                <td><%=sales.date.toDateString()%></td>                        
-                                <td><%=sales.totalSales%></td>
-                            </tr>
-                            <%i++%>
-                        <%})%>
-                        
-                        <%}else{%>
-                            <tr>
-                                <td>null</td>
-                            </tr>
-                            <%}%>
-                    
-                </tbody>
-            </table>
+      <div class="tm-block tm-block-taller tm-block-scroll">
+        <table class="table" id="salesTable">
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Customer</th>
+      <th>Location</th>
+      <th>Order Date</th>						
+      <th>Net Amount</th>
+              </tr>
+          </thead>
+          <tbody>
+            <%let x = (page-1)*6%>
+              <%if(sales!=0){%>
+                  <%let i=1%>
+                  <%sales.forEach(sales => {%>
+                      <tr>
+                         
+                          <td><%=x+i%></td>
+                          <td><%=sales.userId.username%></td>
+                          <td><%=sales.location%></td>
+                          <td><%=sales.date.toDateString()%></td>                        
+                          <td><%=sales.totalSales%></td>
+                      </tr>
+                      <%i++%>
+                  <%})%>
+                  
+                  <%}else{%>
+                      <tr>
+                          <td>null</td>
+                      </tr>
+                      <%}%>
+              
+          </tbody>
+      </table>
+      </div>
+            
 			<div class="clearfix">
                 <ul class="pagination">
                   <%for(let j=1;j<=totalPages;j++){%>
