@@ -177,14 +177,17 @@ const verifyLogin = async (req, res,next) => {
             res.redirect('/login')
             msg = 'Fill all the fields'
         } else {
+            console.log('login server ')
             const email = req.body.email
             const password = req.body.password
             const userData = await User.findOne({ email: email })
             if (userData) {
+                console.log('User data exist')
                 const passwordHash = await bcrypt.compare(password, userData.password)
                 if (passwordHash) {
                     if (userData.is_verified == 1) {
                         if (userData.is_blocked == 0) {
+                            console.log('Login success')
                             req.session.user_id = userData._id;
                             res.redirect('/')
                         } else {
@@ -220,7 +223,7 @@ const loadHome = async (req, res,next) => {
         const banner = await bannerSchema.findOne()
         res.render('home', { product: products, session, msg, message, banner })
         msg = null,
-            message = null
+        message = null
     } catch (err) {
         console.log(err);
         next(err.message)
