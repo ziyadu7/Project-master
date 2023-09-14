@@ -13,12 +13,12 @@ const salesSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Products'
   }],
-  userId:{
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  },location:{
-    type:String,
-    require:true
+  }, location: {
+    type: String,
+    require: true
   },
   totalSales: {
     type: Number,

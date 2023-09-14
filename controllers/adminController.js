@@ -89,44 +89,44 @@ const loadAdminHome = async (req, res) => {
         ]);
 
 
-    const yearlyStart = new Date(new Date().getFullYear(), 0, 1);
-    const yearlyEnd = new Date(new Date().getFullYear(), 11, 31);
-    let salesOfMonth
-    let totalSalesOfMonth
-    const yearlySalesData = await salesSchema.find({
-    date: {
-        $gte: yearlyStart,
-        $lte: yearlyEnd,
-      },
-    })
+        const yearlyStart = new Date(new Date().getFullYear(), 0, 1);
+        const yearlyEnd = new Date(new Date().getFullYear(), 11, 31);
+        let salesOfMonth
+        let totalSalesOfMonth
+        const yearlySalesData = await salesSchema.find({
+            date: {
+                $gte: yearlyStart,
+                $lte: yearlyEnd,
+            },
+        })
 
-    const monthlySalesDetails = [];
-    const monthlyProducSales = []
-    for (let i = 0; i < 12; i++) {
-       salesOfMonth = yearlySalesData.filter((order) => {
-        return order.date.getMonth() === i;
-      });
+        const monthlySalesDetails = [];
+        const monthlyProducSales = []
+        for (let i = 0; i < 12; i++) {
+            salesOfMonth = yearlySalesData.filter((order) => {
+                return order.date.getMonth() === i;
+            });
 
-     
-      totalSalesOfMonth = salesOfMonth.reduce((total, order) => {
-        return (
-          total += order.totalSales
-        )
-      }, 0);
-      let proCount
-      proCount = 0
-      productSalesOfMonth = salesOfMonth.reduce((total, order) => {
-        
-        return (
-                proCount += order.totalItemsSold
-        )
-      }, 0);
 
-      monthlySalesDetails.push(totalSalesOfMonth);
-      monthlyProducSales.push(productSalesOfMonth)
-    }
+            totalSalesOfMonth = salesOfMonth.reduce((total, order) => {
+                return (
+                    total += order.totalSales
+                )
+            }, 0);
+            let proCount
+            proCount = 0
+            productSalesOfMonth = salesOfMonth.reduce((total, order) => {
+
+                return (
+                    proCount += order.totalItemsSold
+                )
+            }, 0);
+
+            monthlySalesDetails.push(totalSalesOfMonth);
+            monthlyProducSales.push(productSalesOfMonth)
+        }
         const orders = await orderSchema.find().populate('userId').populate('item.product');
-        res.render('home', { dailySalesReport, weeklySalesReport, yearlySalesReport, orders, message, usersLength ,monthlySalesReport:JSON.stringify(monthlySalesDetails),monthlyProductSales:JSON.stringify(monthlyProducSales)});
+        res.render('home', { dailySalesReport, weeklySalesReport, yearlySalesReport, orders, message, usersLength, monthlySalesReport: JSON.stringify(monthlySalesDetails), monthlyProductSales: JSON.stringify(monthlyProducSales) });
         message = null;
     } catch (error) {
         console.log(error);
@@ -138,71 +138,71 @@ const loadAdminHome = async (req, res) => {
 
 const loadSalesPage = async (req, res) => {
     try {
-  
-      let filter = '';
-      if (req.query.filter) {
-        filter = req.query.filter;
-      }
 
-      let page = 1;
-      if (req.query.page) {
-        page = req.query.page;
-      }
-  
-      let sales = [];
-      let count
-      if(filter === 'all'){
-        sales = await salesSchema.find({}).populate('userId').limit(6).skip((page - 1) * 6).exec();
-        count = await salesSchema.find({}).countDocuments()
-      }else if (filter === 'weekly') {
-        const startOfWeek = moment().startOf('week').toDate();
-        const endOfWeek = moment().endOf('week').toDate();
+        let filter = '';
+        if (req.query.filter) {
+            filter = req.query.filter;
+        }
 
-        sales = await salesSchema
-          .find({
-            date: {
-              $gte: startOfWeek,
-              $lte: endOfWeek,
-            },
-          })
-          .populate('userId').limit(6).skip((page - 1) * 6).exec();
+        let page = 1;
+        if (req.query.page) {
+            page = req.query.page;
+        }
 
-          count = await salesSchema
-          .find({
-            date: {
-              $gte: startOfWeek,
-              $lte: endOfWeek,
-            },
-          }).countDocuments()
+        let sales = [];
+        let count
+        if (filter === 'all') {
+            sales = await salesSchema.find({}).populate('userId').limit(6).skip((page - 1) * 6).exec();
+            count = await salesSchema.find({}).countDocuments()
+        } else if (filter === 'weekly') {
+            const startOfWeek = moment().startOf('week').toDate();
+            const endOfWeek = moment().endOf('week').toDate();
 
-        }else if(filter === 'yearly'){
+            sales = await salesSchema
+                .find({
+                    date: {
+                        $gte: startOfWeek,
+                        $lte: endOfWeek,
+                    },
+                })
+                .populate('userId').limit(6).skip((page - 1) * 6).exec();
+
+            count = await salesSchema
+                .find({
+                    date: {
+                        $gte: startOfWeek,
+                        $lte: endOfWeek,
+                    },
+                }).countDocuments()
+
+        } else if (filter === 'yearly') {
             const startOfYear = moment().startOf('year').toDate();
             const endOfYear = moment().endOf('year').toDate();
-      
+
             sales = await salesSchema
-              .find({
-                date: {
-                  $gte: startOfYear,
-                  $lte: endOfYear,
-                },
-              })
-              .populate('userId').limit(6).skip((page - 1) * 6).exec();
-              count = await salesSchema
-              .find({
-                date: {
-                  $gte: startOfYear,
-                  $lte: endOfYear,
-                },
-              }).countDocuments()
-        }else{
+                .find({
+                    date: {
+                        $gte: startOfYear,
+                        $lte: endOfYear,
+                    },
+                })
+                .populate('userId').limit(6).skip((page - 1) * 6).exec();
+            count = await salesSchema
+                .find({
+                    date: {
+                        $gte: startOfYear,
+                        $lte: endOfYear,
+                    },
+                }).countDocuments()
+        } else {
             sales = await salesSchema.find().populate('userId').limit(6).skip((page - 1) * 6).exec()
             count = await salesSchema.find().countDocuments()
         }
-      res.render('salesReport', { sales,page,totalPages: Math.ceil(count / 6)});
+        res.render('salesReport', { sales, page, totalPages: Math.ceil(count / 6) });
     } catch (error) {
-      console.log(error.message);
+        console.log(error.message);
     }
-  };
+};
 
 
 
@@ -260,7 +260,7 @@ const loadUserData = async (req, res) => {
                 userData[i].Status = 'Blocked'
             }
         }
-        res.render('userData', { users: userData,page, totalPages: Math.ceil(count / limit), currentPage: page })
+        res.render('userData', { users: userData, page, totalPages: Math.ceil(count / limit), currentPage: page })
     } catch (error) {
         console.log(error);
     }
@@ -359,15 +359,15 @@ const loadProducts = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const id = req.query.id
-        const product = await productSchema.findOne({_id:id})
-        if(product.is_show===true){
-            await productSchema.updateOne({ _id: new Object(id) },{$set:{is_show:false}})
+        const product = await productSchema.findOne({ _id: id })
+        if (product.is_show === true) {
+            await productSchema.updateOne({ _id: new Object(id) }, { $set: { is_show: false } })
             res.redirect('/admin/products')
             message = 'Product Unlisted successfully'
-        }else{
-            await productSchema.updateOne({ _id: new Object(id) },{$set:{is_show:true}})
-        res.redirect('/admin/products')
-        message = 'Product Listed successfully'
+        } else {
+            await productSchema.updateOne({ _id: new Object(id) }, { $set: { is_show: true } })
+            res.redirect('/admin/products')
+            message = 'Product Listed successfully'
         }
     } catch (error) {
         console.log(error);
@@ -405,7 +405,7 @@ const newProduct = async (req, res) => {
 const addProduct = async (req, res) => {
     try {
         const pro = req.body
-        
+
         if (pro.title.trim().length == 0 || pro.brand.trim().length == 0 || pro.description.trim().length == 0 || req.files == 0) {
             msg = 'Full field should be filled'
             res.redirect('/admin/addProduct')
@@ -415,7 +415,7 @@ const addProduct = async (req, res) => {
             for (i = 0; i < image.length; i++) {
                 let path = image[i].path
                 const processImage = new Promise((resolve, reject) => {
-                    sharp(path).rotate().resize(270, 360).toFile('public/proImage/' + image[i].filename,(err) => {
+                    sharp(path).rotate().resize(270, 360).toFile('public/proImage/' + image[i].filename, (err) => {
                         sharp.cache(false);
                         if (err) {
                             console.log(err);
@@ -452,7 +452,7 @@ const addProduct = async (req, res) => {
 
             message = 'Product added successfully'
             res.redirect('/admin/addProduct')
-            
+
         }
     } catch (error) {
         console.log(error);
@@ -464,7 +464,7 @@ const editProduct = async (req, res) => {
     try {
         const prod = req.body
         const id = req.query.id
-        const catId = await categorySchema.findOne({category:prod.category})
+        const catId = await categorySchema.findOne({ category: prod.category })
         if (prod.title.trim().length == 0 || prod.price.trim().length == 0 || prod.stocks.trim().length == 0 || prod.category.length == 0 || prod.brand.trim().length == 0 || prod.description.trim().length == 0) {
             msg = 'Full field should be filled'
             res.redirect('/admin/products')
@@ -475,7 +475,7 @@ const editProduct = async (req, res) => {
                 for (i = 0; i < image.length; i++) {
                     let path = image[i].path
                     const processImage = new Promise((resolve, reject) => {
-                        sharp(path).rotate().resize(270, 360).toFile('public/proImage/' + image[i].filename,(err) => {
+                        sharp(path).rotate().resize(270, 360).toFile('public/proImage/' + image[i].filename, (err) => {
                             sharp.cache(false);
                             if (err) {
                                 console.log(err);
@@ -497,7 +497,7 @@ const editProduct = async (req, res) => {
                     }).catch((err) => {
                         console.log(err);
                     });
-                    
+
                 }
                 newprod = await productSchema.updateOne({ _id: new Object(id) }, {
                     $set: {
@@ -510,7 +510,7 @@ const editProduct = async (req, res) => {
                         image: req.files.map(file => file.filename)
                     }
                 })
-            }else{
+            } else {
                 newprod = await productSchema.updateOne({ _id: new Object(id) }, {
                     $set: {
                         title: prod.title,
@@ -532,10 +532,10 @@ const editProduct = async (req, res) => {
 
 //////////LOAD ADD CATEGORY////////////
 
-const loadAddCategory = async(req,res)=>{
+const loadAddCategory = async (req, res) => {
     try {
-        res.render('addCategory',{msg})
-        msg=null
+        res.render('addCategory', { msg })
+        msg = null
     } catch (error) {
         console.log(error.message);
     }
@@ -566,12 +566,12 @@ const addCategory = async (req, res) => {
 
 ////////LOAD EDIT CATEGORY PAGE///////////
 
-const loadEditCategory = async(req,res)=>{
+const loadEditCategory = async (req, res) => {
     try {
         const id = req.query.id
-        const category = await categorySchema.findOne({_id:id})
-        res.render('editCategory',{category,msg})
-        msg=null
+        const category = await categorySchema.findOne({ _id: id })
+        res.render('editCategory', { category, msg })
+        msg = null
     } catch (error) {
         console.log(error.message);
     }
@@ -584,16 +584,16 @@ const editCategory = async (req, res) => {
     try {
         const Cat = req.query.id
         const newCat = req.body.newcategory
-        const checkNew = await categorySchema.findOne({category:newCat})
-            if (checkNew) {
-                res.redirect("/admin/Category")
-                msg = 'New edited category already exist'
-            } else {
-                await categorySchema.updateOne({_id:Cat},{$set:{ category: newCat }})
-                message = 'Category updated successfully'
-                res.redirect('/admin/Category')
-            }
-        
+        const checkNew = await categorySchema.findOne({ category: newCat })
+        if (checkNew) {
+            res.redirect("/admin/Category")
+            msg = 'New edited category already exist'
+        } else {
+            await categorySchema.updateOne({ _id: Cat }, { $set: { category: newCat } })
+            message = 'Category updated successfully'
+            res.redirect('/admin/Category')
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -617,12 +617,12 @@ const categoryManage = async (req, res) => {
 const categoryDelete = async (req, res) => {
     try {
         const delCat = req.query.id
-        const product = await productSchema.findOne({category:delCat})
+        const product = await productSchema.findOne({ category: delCat })
         if (product) {
             res.redirect('/admin/Category')
             msg = 'Category used in product'
         } else {
-            await categorySchema.deleteOne({_id: delCat })
+            await categorySchema.deleteOne({ _id: delCat })
             res.redirect('/admin/Category')
             message = 'Category deleted successfully'
         }
@@ -638,13 +638,13 @@ const cancelOrder = async (req, res) => {
     try {
         const orderId = req.query.orderid
         await orderSchema.updateOne({ _id: orderId }, { $set: { admin_cancelled: true } })
-        const orders = await orderSchema.findOne({_id:orderId}).populate('item.product')
-        const user = await userSchema.findOne({_id:orders.userId})
-        if(orders.paymentType=='online'||orders.paymentType=='Wallet'){
-            if(user.wallet){
-                await userSchema.findByIdAndUpdate({_id:orders.userId},{$inc:{wallet:orders.totalPrice}})
-            }else{
-                await userSchema.findByIdAndUpdate({_id:orders.userId},{$set:{wallet:orders.totalPrice}})
+        const orders = await orderSchema.findOne({ _id: orderId }).populate('item.product')
+        const user = await userSchema.findOne({ _id: orders.userId })
+        if (orders.paymentType == 'online' || orders.paymentType == 'Wallet') {
+            if (user.wallet) {
+                await userSchema.findByIdAndUpdate({ _id: orders.userId }, { $inc: { wallet: orders.totalPrice } })
+            } else {
+                await userSchema.findByIdAndUpdate({ _id: orders.userId }, { $set: { wallet: orders.totalPrice } })
             }
         }
         orders.item.forEach(async (item) => {
@@ -676,7 +676,7 @@ const orderStatus = async (req, res) => {
                 updatedOrder.item.forEach(item => {
                     product.push(item.product)
                     totalprice += item.price * item.quantity
-                    soldCount += item.quantity 
+                    soldCount += item.quantity
                 });
 
                 const newSalesReport = new salesSchema({
@@ -685,8 +685,8 @@ const orderStatus = async (req, res) => {
                     products: product,
                     totalSales: updatedOrder.totalPrice,
                     totalItemsSold: parseInt(soldCount),
-                    userId:updatedOrder.userId,
-                    location:updatedOrder.address[0].city
+                    userId: updatedOrder.userId,
+                    location: updatedOrder.address[0].city
                 })
                 await newSalesReport.save()
             }
@@ -701,12 +701,12 @@ const orderStatus = async (req, res) => {
 
 /////////////LOAD COUPONS PAGE////////////
 
-const loadCoupons = async(req,res)=>{
+const loadCoupons = async (req, res) => {
     try {
         const coupons = await couponSchema.find()
-        res.render('coupons',{msg,message,coupons})
-        msg=null
-        message=null
+        res.render('coupons', { msg, message, coupons })
+        msg = null
+        message = null
     } catch (error) {
         console.log(error.message);
     }
@@ -714,11 +714,11 @@ const loadCoupons = async(req,res)=>{
 
 ///////////LOAD ADD COUPON///////////////
 
-const loadAddCoupon = async(req,res)=>{
+const loadAddCoupon = async (req, res) => {
     try {
-        res.render('addCoupon',{msg,message})
-        msg=null
-        message=null
+        res.render('addCoupon', { msg, message })
+        msg = null
+        message = null
     } catch (error) {
         console.log(error.message);
     }
@@ -726,21 +726,21 @@ const loadAddCoupon = async(req,res)=>{
 
 //////////////ADD COUPON////////////////
 
-const addCoupon = async(req,res)=>{
+const addCoupon = async (req, res) => {
     try {
         const coupon = req.body
-        
+
         const newCoupon = new couponSchema({
-            couponName:coupon.Name,
-            couponCode:coupon.Code,
-            startDate:coupon.StartDate,
-            endDate:coupon.endDate,
-            maxDiscount:coupon.maxDiscount,
-            minPurchase:coupon.minPurchase
+            couponName: coupon.Name,
+            couponCode: coupon.Code,
+            startDate: coupon.StartDate,
+            endDate: coupon.endDate,
+            maxDiscount: coupon.maxDiscount,
+            minPurchase: coupon.minPurchase
         })
         await newCoupon.save()
         res.redirect('/admin/coupon')
-        message='Coupon added successfully'
+        message = 'Coupon added successfully'
     } catch (error) {
         console.log(error.message);
     }
@@ -748,12 +748,12 @@ const addCoupon = async(req,res)=>{
 
 //////////LOAD EDIT COUPON///////////////
 
-const loadEditCoupon = async(req,res)=>{
+const loadEditCoupon = async (req, res) => {
     try {
         const id = req.query.id
-        const coupon = await couponSchema.findOne({_id:id})
-        res.render('editCoupon',{coupon,msg})
-        msg=null
+        const coupon = await couponSchema.findOne({ _id: id })
+        res.render('editCoupon', { coupon, msg })
+        msg = null
     } catch (error) {
         console.log(error.message);
     }
@@ -762,14 +762,14 @@ const loadEditCoupon = async(req,res)=>{
 
 /////////////// EDIT COUPON/////////////
 
-const editCoupon = async(req,res)=>{
+const editCoupon = async (req, res) => {
     try {
         const coupon = req.body
-        const id=req.query.id
+        const id = req.query.id
 
-        await couponSchema.updateOne({_id:id},{$set:{couponName:coupon.Name,couponCode:coupon.Code,startDate:coupon.StartDate,endDate:coupon.endDate,maxDiscount:coupon.maxDiscount,minPurchase:coupon.minPurchase}})
+        await couponSchema.updateOne({ _id: id }, { $set: { couponName: coupon.Name, couponCode: coupon.Code, startDate: coupon.StartDate, endDate: coupon.endDate, maxDiscount: coupon.maxDiscount, minPurchase: coupon.minPurchase } })
         res.redirect("/admin/coupon")
-        message='Coupon edited successfully'
+        message = 'Coupon edited successfully'
     } catch (error) {
         console.log(error.message);
     }
@@ -778,11 +778,11 @@ const editCoupon = async(req,res)=>{
 
 ///////////////DELETE COUPON////////////
 
-const deleteCoupon = async(req,res)=>{
+const deleteCoupon = async (req, res) => {
     try {
         const id = req.query.id
 
-        await couponSchema.deleteOne({_id:id})
+        await couponSchema.deleteOne({ _id: id })
         res.redirect('/admin/coupon')
         message = 'Coupon delted successfully'
     } catch (error) {
@@ -793,12 +793,12 @@ const deleteCoupon = async(req,res)=>{
 
 ////////////LOAD BANNER SHOWING PAGE/////////
 
-const bannersPage = async(req,res)=>{
+const bannersPage = async (req, res) => {
     try {
         const banners = await bannerSchema.find()
-        res.render('banners',{message,banners,msg})
+        res.render('banners', { message, banners, msg })
         msg = null,
-        message = null
+            message = null
     } catch (error) {
         console.log(error.message);
     }
@@ -806,7 +806,7 @@ const bannersPage = async(req,res)=>{
 
 ////////LOAD ADD BANNER PAGE////////
 
-const loadAddBanner = async(req,res)=>{
+const loadAddBanner = async (req, res) => {
     try {
         res.render('addBanner')
     } catch (error) {
@@ -817,27 +817,27 @@ const loadAddBanner = async(req,res)=>{
 
 //////////ADD BANNER//////////
 
-const addBanner = async(req,res)=>{
+const addBanner = async (req, res) => {
     try {
         const ban = req.body
         const old = await bannerSchema.find()
-        if(old.length==0||old==undefined){
+        if (old.length == 0 || old == undefined) {
             const banner = new bannerSchema({
-                heading1:ban.heading1,
-                heading2:ban.heading2,
-                heading3:ban.heading3,
-                description1:ban.description1,
-                description2:ban.description2,
-                description3:ban.description3,
-                image:req.file.filename
+                heading1: ban.heading1,
+                heading2: ban.heading2,
+                heading3: ban.heading3,
+                description1: ban.description1,
+                description2: ban.description2,
+                description3: ban.description3,
+                image: req.file.filename
             })
-    
+
             banner.save()
             res.redirect('/admin/banner')
             message = 'Banner added successfully'
-        }else{
+        } else {
             res.redirect('/admin/banner')
-            msg='There is already have a banner'
+            msg = 'There is already have a banner'
         }
     } catch (error) {
         console.log(error.message);
@@ -847,10 +847,10 @@ const addBanner = async(req,res)=>{
 
 ////////////DELETE BANNER/////////////////
 
-const deleteBanner = async(req,res)=>{
+const deleteBanner = async (req, res) => {
     try {
         const id = req.query.id
-        await bannerSchema.deleteOne({_id:id})
+        await bannerSchema.deleteOne({ _id: id })
         res.redirect('/admin/banner')
         message = 'banner delted successfully'
     } catch (error) {
